@@ -1,0 +1,37 @@
+# Architecture Diagram (ASCII Art for Video Creation)
+
+```
+┌─────────────────────────────────────────────────────────────────────────────────┐
+│                                QEMU Integration Architecture                     │
+└─────────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────┐    ┌──────────────────┐    ┌─────────────────────┐
+│     QEMU        │    │   Socket Bridge  │    │   SystemC Model     │
+│                 │    │                  │    │                     │
+│  ┌───────────┐  │    │  ┌─────────────┐ │    │  ┌───────────────┐  │
+│  │    CPU    │  │    │  │   Memory    │ │    │  │   Whitney     │  │
+│  │ ARM64/x86 │  │◄──►│  │   Manager   │ │◄──►│  │   LPDDR5      │  │
+│  │  RISC-V   │  │    │  │             │ │    │  │   Model       │  │
+│  └───────────┘  │    │  └─────────────┘ │    │  └───────────────┘  │
+│                 │    │                  │    │                     │
+│  ┌───────────┐  │    │  ┌─────────────┐ │    │  ┌───────────────┐  │
+│  │  Devices  │  │    │  │   Protocol  │ │    │  │  Verification │  │
+│  │  & I/O    │  │    │  │   Bridge    │ │    │  │  Framework    │  │
+│  └───────────┘  │    │  └─────────────┘ │    │  └───────────────┘  │
+│                 │    │                  │    │                     │
+└─────────────────┘    └──────────────────┘    └─────────────────────┘
+      │                         │                         │
+      │                         │                         │
+   System                  Socket/TCP              AXI Transactions
+  Emulation               Communication           & Memory Modeling
+```
+
+## Data Flow Animation Steps:
+
+1. CPU in QEMU executes memory instruction
+2. QEMU memory subsystem receives request
+3. Request sent via TCP socket to Bridge
+4. Bridge converts to AXI transaction
+5. SystemC model processes with LPDDR5 timing
+6. Response sent back through Bridge
+7. QEMU receives response and continues execution

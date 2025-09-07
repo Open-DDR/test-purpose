@@ -1,0 +1,411 @@
+jayb@ubuntu22:~/proj/lpddr5/systemc/qemu_integration/examples$ ./run_arm64_test.sh 
+Whitney LPDDR5 SystemC + QEMU ARM64 Test
+==========================================
+Starting Whitney SystemC server...
+SystemC server started with PID: 143216
+
+        SystemC 2.3.3-Accellera --- Jun  6 2025 01:06:41
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+Whitney LPDDR5 SystemC Server Configuration:
+  Port:         8888
+  Memory Size:  1024 MB
+  Architecture: arm64
+  Trace File:   whitney_arm64_trace.vcd
+  Verbose:      No
+  Daemon:       No
+
+QemuSystemCBridge initialized on port 8888
+Starting Whitney LPDDR5 SystemC Server...
+Listening on port 8888
+Press Ctrl+C to stop
+
+Starting SystemC simulation thread...
+SystemC-QEMU bridge server started on port 8888
+Whitney SystemC Server running...
+Press Ctrl+C to stop
+Dedicated server thread started, listening for connections...
+Server thread loop iteration, checking for connections...
+Active client threads: 0
+Calling accept() on server socket 3...
+Testing SystemC server connectivity...
+SystemC-QEMU Bridge Test Client
+Server: 127.0.0.1:8888
+Test:   basic
+
+Connected to SystemC server at 127.0.0.1:8888
+
+=== Running Basic Test ===
+Client connected from 127.0.0.1:40120 on socket 4
+Created client handler thread, total threads: 1
+Server thread continuing to next iteration...
+Client handler thread started for socket 4
+Processing message type 5 from client
+System initialized: 
+  Memory size: 1024 MB
+  Page size: 4096 bytes
+  Cache line: 64 bytes
+  Architecture: arm64
+Response received (type=6)
+Writing 0x123456789abcdef0 to address 0x1000
+Server thread loop iteration, checking for connections...
+Active client threads: 1
+Calling accept() on server socket 3...
+Processing message type 3 from client
+Write response: addr=0x1000 size=8 status=0
+Reading from address 0x4096
+Processing message type 1 from client
+Read response: addr=0x1000 size=8 status=0 data=0x00100000efbeadde
+Getting system status...
+Processing message type 7 from client
+Status response:
+  Total reads:  1
+  Total writes: 1
+  Total errors: 0
+  Bandwidth:    0 MB/s
+  Active banks: 8
+  Page hits:    0
+  Page misses:  0
+Basic test completed successfully!
+
+Test completed successfully!
+Client connection closed or receive failed
+Client disconnected, socket 4 closed
+SystemC server test passed!
+Warning: Kernel image 'vmlinux-arm64' not found.
+Creating a simple test kernel command...
+Note: This will boot to QEMU monitor only.
+Note: No initrd image found, booting without initrd.
+Starting QEMU ARM64 system...
+Configuration:
+  Architecture: ARM64 (Cortex-A57)
+  Memory: 1G (via SystemC backend)
+  SystemC Port: 8888
+  Kernel: vmlinux-arm64
+
+QEMU will connect to SystemC server for memory operations
+Press Ctrl+A, X to exit QEMU
+
+# Conceptual QEMU command (requires SystemC backend support):
+qemu-system-aarch64 \
+  -M virt \
+  -cpu cortex-a57 \
+  -m 1G \
+  -object memory-backend-systemc,id=mem0,size=1G,server=localhost:8888 \
+  -numa node,memdev=mem0 \
+  -kernel /dev/null \
+   \
+  -append 'console=ttyAMA0 root=/dev/ram0 rw' \
+  -nographic \
+  -monitor stdio
+
+Running memory stress test via SystemC...
+Waiting for server to be ready for new connection...
+SystemC-QEMU Bridge Test Client
+Server: 127.0.0.1:8888
+Test:   performance
+
+Connected to SystemC server at 127.0.0.1:8888
+
+=== Running Performance Test ===
+Initializing SystemC memory model - sending init request...
+Client connected from 127.0.0.1:40124 on socket 5
+Init request sent, waiting for response...
+Created client handler thread, total threads: 2
+Server thread continuing to next iteration...
+Client handler thread started for socket 5
+Processing message type 5 from client
+System initialized: 
+  Memory size: 2048 MB
+  Page size: 4096 bytes
+  Cache line: 64 bytes
+  Architecture: arm64
+Response received (type=6)
+SystemC memory model initialized successfully!
+
+Initial system status:
+Processing message type 7 from client
+Server thread loop iteration, checking for connections...
+Active client threads: 2
+Calling accept() on server socket 3...
+Status response:
+  Total reads:  1
+  Total writes: 1
+  Total errors: 0
+  Bandwidth:    0 MB/s
+  Active banks: 8
+  Page hits:    0
+  Page misses:  0
+
+--- Write Operations Phase ---
+Performing 50 write operations...
+Processing message type 3 from client
+Write response: addr=0xf1cf0 size=8 status=0
+Processing message type 3 from client
+Write response: addr=0xacda8 size=8 status=0
+Processing message type 3 from client
+Write response: addr=0x37fd0 size=8 status=0
+Processing message type 3 from client
+Write response: addr=0xf2da0 size=8 status=0
+Processing message type 3 from client
+Write response: addr=0xfe2b8 size=8 status=0
+Processing message type 3 from client
+Write response: addr=0x4f738 size=8 status=0
+Processing message type 3 from client
+Write response: addr=0xb60e0 size=8 status=0
+Processing message type 3 from client
+Write response: addr=0x69198 size=8 status=0
+Processing message type 3 from client
+Write response: addr=0xa6a70 size=8 status=0
+Processing message type 3 from client
+Write response: addr=0x8e708 size=8 status=0
+  Progress: 10/50 writes (20.0%) - 11.31 ops/sec
+Processing message type 3 from client
+Write response: addr=0xed040 size=8 status=0
+Processing message type 3 from client
+Write response: addr=0xedeb8 size=8 status=0
+Processing message type 3 from client
+Write response: addr=0x62e68 size=8 status=0
+Processing message type 3 from client
+Write response: addr=0xb0ac0 size=8 status=0
+Processing message type 3 from client
+Write response: addr=0x71728 size=8 status=0
+Processing message type 3 from client
+Write response: addr=0xde40 size=8 status=0
+Processing message type 3 from client
+Write response: addr=0xae3e8 size=8 status=0
+Processing message type 3 from client
+Write response: addr=0x8c628 size=8 status=0
+Processing message type 3 from client
+Write response: addr=0xcd690 size=8 status=0
+Processing message type 3 from client
+Write response: addr=0xc5348 size=8 status=0
+  Progress: 20/50 writes (40.0%) - 11.34 ops/sec
+Processing message type 3 from client
+Write response: addr=0x8b580 size=8 status=0
+Processing message type 3 from client
+Write response: addr=0x6ef20 size=8 status=0
+Processing message type 3 from client
+Write response: addr=0x84f18 size=8 status=0
+Processing message type 3 from client
+Write response: addr=0x98688 size=8 status=0
+Processing message type 3 from client
+Write response: addr=0x71278 size=8 status=0
+Processing message type 3 from client
+Write response: addr=0x472d8 size=8 status=0
+Processing message type 3 from client
+Write response: addr=0x8ef38 size=8 status=0
+Processing message type 3 from client
+Write response: addr=0x5d1b0 size=8 status=0
+Processing message type 3 from client
+Write response: addr=0x3cc28 size=8 status=0
+Processing message type 3 from client
+Write response: addr=0xdc918 size=8 status=0
+  Progress: 30/50 writes (60.0%) - 11.33 ops/sec
+Processing message type 3 from client
+Write response: addr=0x1f6d8 size=8 status=0
+Processing message type 3 from client
+Write response: addr=0x38dd0 size=8 status=0
+Processing message type 3 from client
+Write response: addr=0x1cf8 size=8 status=0
+Processing message type 3 from client
+Write response: addr=0x462c8 size=8 status=0
+Processing message type 3 from client
+Write response: addr=0xd248 size=8 status=0
+Processing message type 3 from client
+Write response: addr=0x48a80 size=8 status=0
+Processing message type 3 from client
+Write response: addr=0x73d68 size=8 status=0
+Processing message type 3 from client
+Write response: addr=0xf8208 size=8 status=0
+Processing message type 3 from client
+Write response: addr=0x6dc80 size=8 status=0
+Processing message type 3 from client
+Write response: addr=0x6feb8 size=8 status=0
+  Progress: 40/50 writes (80.0%) - 11.33 ops/sec
+Processing message type 3 from client
+Write response: addr=0x2fa10 size=8 status=0
+Processing message type 3 from client
+Write response: addr=0x2e0b8 size=8 status=0
+Processing message type 3 from client
+Write response: addr=0xae0f0 size=8 status=0
+Processing message type 3 from client
+Write response: addr=0xa4e88 size=8 status=0
+Processing message type 3 from client
+Write response: addr=0xa69f8 size=8 status=0
+Processing message type 3 from client
+Write response: addr=0xb1df0 size=8 status=0
+Processing message type 3 from client
+Write response: addr=0x4d4c0 size=8 status=0
+Processing message type 3 from client
+Write response: addr=0xf0d70 size=8 status=0
+Processing message type 3 from client
+Write response: addr=0xb6880 size=8 status=0
+Processing message type 3 from client
+Write response: addr=0xeb858 size=8 status=0
+  Progress: 50/50 writes (100.0%) - 11.33 ops/sec
+    Getting intermediate status...
+Processing message type 7 from client
+Status response:
+  Total reads:  1
+  Total writes: 51
+  Total errors: 0
+  Bandwidth:    0 MB/s
+  Active banks: 8
+  Page hits:    0
+  Page misses:  0
+Write phase completed: 50 successful, 0 failed
+
+--- Read Operations Phase ---
+Performing 50 read operations...
+Processing message type 1 from client
+Read response: addr=0xf1398 size=8 status=0 data=0x98130f00efbeadde
+Processing message type 1 from client
+Read response: addr=0x5778 size=8 status=0 data=0x78570000efbeadde
+Processing message type 1 from client
+Read response: addr=0xe56f0 size=8 status=0 data=0xf0560e00efbeadde
+Processing message type 1 from client
+Read response: addr=0x49f28 size=8 status=0 data=0x289f0400efbeadde
+Processing message type 1 from client
+Read response: addr=0x54b08 size=8 status=0 data=0x084b0500efbeadde
+Processing message type 1 from client
+Read response: addr=0xe17c8 size=8 status=0 data=0xc8170e00efbeadde
+Processing message type 1 from client
+Read response: addr=0x38408 size=8 status=0 data=0x08840300efbeadde
+Processing message type 1 from client
+Read response: addr=0x99e10 size=8 status=0 data=0x109e0900efbeadde
+Processing message type 1 from client
+Read response: addr=0xb5d50 size=8 status=0 data=0x505d0b00efbeadde
+Processing message type 1 from client
+Read response: addr=0x721d0 size=8 status=0 data=0xd0210700efbeadde
+  Progress: 10/50 reads (20.0%) - 11.24 total ops/sec
+Processing message type 1 from client
+Read response: addr=0x3be70 size=8 status=0 data=0x70be0300efbeadde
+Processing message type 1 from client
+Read response: addr=0x92c40 size=8 status=0 data=0x402c0900efbeadde
+Processing message type 1 from client
+Read response: addr=0x58000 size=8 status=0 data=0x00800500efbeadde
+Processing message type 1 from client
+Read response: addr=0x84f08 size=8 status=0 data=0x084f0800efbeadde
+Processing message type 1 from client
+Read response: addr=0x39a00 size=8 status=0 data=0x009a0300efbeadde
+Processing message type 1 from client
+Read response: addr=0xd89c0 size=8 status=0 data=0xc0890d00efbeadde
+Processing message type 1 from client
+Read response: addr=0x1cf98 size=8 status=0 data=0x98cf0100efbeadde
+Processing message type 1 from client
+Read response: addr=0xa46c8 size=8 status=0 data=0xc8460a00efbeadde
+Processing message type 1 from client
+Read response: addr=0x54eb8 size=8 status=0 data=0xb84e0500efbeadde
+Processing message type 1 from client
+Read response: addr=0x9e6b8 size=8 status=0 data=0xb8e60900efbeadde
+  Progress: 20/50 reads (40.0%) - 11.26 total ops/sec
+Processing message type 1 from client
+Read response: addr=0x34dc0 size=8 status=0 data=0xc04d0300efbeadde
+Processing message type 1 from client
+Read response: addr=0x48468 size=8 status=0 data=0x68840400efbeadde
+Processing message type 1 from client
+Read response: addr=0x3ae20 size=8 status=0 data=0x20ae0300efbeadde
+Processing message type 1 from client
+Read response: addr=0x1d5c8 size=8 status=0 data=0xc8d50100efbeadde
+Processing message type 1 from client
+Read response: addr=0x89bf8 size=8 status=0 data=0xf89b0800efbeadde
+Processing message type 1 from client
+Read response: addr=0x1ef68 size=8 status=0 data=0x68ef0100efbeadde
+Processing message type 1 from client
+Read response: addr=0x2bbe8 size=8 status=0 data=0xe8bb0200efbeadde
+Processing message type 1 from client
+Read response: addr=0xd5df8 size=8 status=0 data=0xf85d0d00efbeadde
+Processing message type 1 from client
+Read response: addr=0x39ae8 size=8 status=0 data=0xe89a0300efbeadde
+Processing message type 1 from client
+Read response: addr=0xb9f48 size=8 status=0 data=0x489f0b00efbeadde
+  Progress: 30/50 reads (60.0%) - 11.27 total ops/sec
+Processing message type 1 from client
+Read response: addr=0x59828 size=8 status=0 data=0x28980500efbeadde
+Processing message type 1 from client
+Read response: addr=0xd1078 size=8 status=0 data=0x78100d00efbeadde
+Processing message type 1 from client
+Read response: addr=0xa2828 size=8 status=0 data=0x28280a00efbeadde
+Processing message type 1 from client
+Read response: addr=0xbda50 size=8 status=0 data=0x50da0b00efbeadde
+Processing message type 1 from client
+Read response: addr=0x3d170 size=8 status=0 data=0x70d10300efbeadde
+Processing message type 1 from client
+Read response: addr=0xdb278 size=8 status=0 data=0x78b20d00efbeadde
+Processing message type 1 from client
+Read response: addr=0x346d8 size=8 status=0 data=0xd8460300efbeadde
+Processing message type 1 from client
+Read response: addr=0xafd78 size=8 status=0 data=0x78fd0a00efbeadde
+Processing message type 1 from client
+Read response: addr=0xe62d8 size=8 status=0 data=0xd8620e00efbeadde
+Processing message type 1 from client
+Read response: addr=0x11eb8 size=8 status=0 data=0xb81e0100efbeadde
+  Progress: 40/50 reads (80.0%) - 11.28 total ops/sec
+Processing message type 1 from client
+Read response: addr=0x9ce18 size=8 status=0 data=0x18ce0900efbeadde
+Processing message type 1 from client
+Read response: addr=0x8a528 size=8 status=0 data=0x28a50800efbeadde
+Processing message type 1 from client
+Read response: addr=0x5f6f8 size=8 status=0 data=0xf8f60500efbeadde
+Processing message type 1 from client
+Read response: addr=0xc780 size=8 status=0 data=0x80c70000efbeadde
+Processing message type 1 from client
+Read response: addr=0x2ae08 size=8 status=0 data=0x08ae0200efbeadde
+Processing message type 1 from client
+Read response: addr=0x2ec80 size=8 status=0 data=0x80ec0200efbeadde
+Processing message type 1 from client
+Read response: addr=0x9b270 size=8 status=0 data=0x70b20900efbeadde
+Processing message type 1 from client
+Read response: addr=0x3b370 size=8 status=0 data=0x70b30300efbeadde
+Processing message type 1 from client
+Read response: addr=0x3de90 size=8 status=0 data=0x90de0300efbeadde
+Processing message type 1 from client
+Read response: addr=0x26ab0 size=8 status=0 data=0xb06a0200efbeadde
+  Progress: 50/50 reads (100.0%) - 11.29 total ops/sec
+    Getting intermediate status...
+Processing message type 7 from client
+Status response:
+  Total reads:  51
+  Total writes: 51
+  Total errors: 0
+  Bandwidth:    0 MB/s
+  Active banks: 8
+  Page hits:    0
+  Page misses:  0
+Read phase completed: 50 successful, 0 failed
+
+--- Performance Test Results ---
+Total test duration: 8904 ms
+Total operations: 100
+Successful writes: 50
+Successful reads: 50
+Failed operations: 0
+Average operation time: 89.040 ms
+Overall throughput: 11.23 ops/sec
+
+Final system status:
+Processing message type 7 from client
+Status response:
+  Total reads:  51
+  Total writes: 51
+  Total errors: 0
+  Bandwidth:    0 MB/s
+  Active banks: 8
+  Page hits:    0
+  Page misses:  0
+
+Test completed successfully!
+Client connection closed or receive failed
+Client disconnected, socket 5 closed
+
+ARM64 test completed!
+SystemC trace saved to: whitney_arm64_trace.vcd
+
+To view the trace:
+  gtkwave whitney_arm64_trace.vcd
+
+Cleaning up...
+Stopping SystemC server (PID: 143216)
+
+Received signal 15, shutting down...

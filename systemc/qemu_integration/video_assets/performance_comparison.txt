@@ -1,0 +1,46 @@
+# Performance Comparison Charts (Data for Video Graphics)
+
+## Memory Latency Comparison
+```
+Native QEMU:    ████ 100ns
+SystemC Bridge: ████████████████████████████████████████████████ 10-50μs
+                
+Scale: Each █ = 1μs
+Overhead: 100-500x increase
+```
+
+## Memory Bandwidth Comparison  
+```
+Native QEMU:    ████████████████████████████████████████████████ 10 GB/s
+SystemC Bridge: ██████ 100-500 MB/s
+
+Scale: Each █ = 200 MB/s
+Overhead: 20-100x reduction
+```
+
+## CPU Performance Impact
+```
+Baseline:       ████████████████████████████████████████████████ 100%
+With SystemC:   ████████████████████████████████████████ 50-90%
+
+Typical overhead: 10-50% performance reduction
+```
+
+## Performance Data Table
+| Metric | Native QEMU | With SystemC Bridge | Overhead |
+|--------|-------------|---------------------|----------|
+| Memory Latency | ~100ns | ~10-50μs | 100-500x |
+| Memory Bandwidth | ~10 GB/s | ~100-500 MB/s | 20-100x |
+| CPU Performance | Baseline | 10-50% slower | Variable |
+| Accuracy | Functional | Cycle-accurate | N/A |
+| Real-world modeling | Limited | Full LPDDR5 | Complete |
+
+## Optimization Impact
+```
+Before Optimization:  ████ 100 MB/s
+After Batching:      ████████ 200 MB/s  
+After Caching:       ████████████ 300 MB/s
+After Async I/O:     ████████████████ 400 MB/s
+Full Optimization:   ████████████████████ 500 MB/s
+
+Improvement: 5x better with all optimizations

@@ -1,0 +1,171 @@
+# Enhanced Makefile for Whitney LPDDR5 SystemC Model
+# Supports both original and enhanced versions
+
+# SystemC installation path - adjust as needed
+SYSTEMC_HOME ?= /aws/home/jayb/systemc-2.3.3
+SYSTEMC_ARCH ?= linux64
+
+# Compiler settings
+CXX = g++
+CXXFLAGS = -std=c++17 -Wall -Wextra -O2
+INCLUDES = -I$(SYSTEMC_HOME)/include -I.
+LDFLAGS = -L$(SYSTEMC_HOME)/lib-$(SYSTEMC_ARCH)
+LIBS = -lsystemc -lm
+
+# Source files
+ORIGINAL_SOURCES = whitney_systemc_model.cpp whitney_testbench.cpp
+ENHANCED_SOURCES = whitney_systemc_model_enhanced.cpp whitney_testbench_enhanced.cpp
+
+# Object files
+ORIGINAL_OBJECTS = $(ORIGINAL_SOURCES:.cpp=.o)
+ENHANCED_OBJECTS = $(ENHANCED_SOURCES:.cpp=.o)
+
+# Executables
+ORIGINAL_TARGET = whitney_simulation
+ENHANCED_TARGET = whitney_simulation_enhanced
+
+# Default target
+all: $(ORIGINAL_TARGET) $(ENHANCED_TARGET)
+
+# Original simulation
+$(ORIGINAL_TARGET): $(ORIGINAL_OBJECTS)
+	$(CXX) $(LDFLAGS) -o $@ $^ $(LIBS)
+
+# Enhanced simulation
+$(ENHANCED_TARGET): $(ENHANCED_OBJECTS)
+	$(CXX) $(LDFLAGS) -o $@ $^ $(LIBS)
+
+# Object file rules
+%.o: %.cpp
+	$(CXX) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
+
+# Dependencies
+whitney_systemc_model.o: whitney_systemc_model.cpp whitney_systemc_model.h
+whitney_testbench.o: whitney_testbench.cpp whitney_systemc_model.h
+
+whitney_systemc_model_enhanced.o: whitney_systemc_model_enhanced.cpp whitney_systemc_model_enhanced.h
+whitney_testbench_enhanced.o: whitney_testbench_enhanced.cpp whitney_systemc_model_enhanced.h
+
+# Test targets
+test: $(ORIGINAL_TARGET)
+	./$(ORIGINAL_TARGET)
+
+test-enhanced: $(ENHANCED_TARGET)
+	./$(ENHANCED_TARGET)
+
+# Run both tests
+test-all: test test-enhanced
+
+# Verification targets
+verify: $(ENHANCED_TARGET)
+	@echo "Running comprehensive LPDDR5 verification..."
+	./$(ENHANCED_TARGET)
+	@echo "Verification completed. Check whitney_trace_enhanced.vcd for waveforms."
+
+# Performance test
+perf-test: $(ENHANCED_TARGET)
+	@echo "Running performance verification..."
+	time ./$(ENHANCED_TARGET)
+
+# Memory test with valgrind (if available)
+mem-test: $(ENHANCED_TARGET)
+	@if command -v valgrind >/dev/null 2>&1; then \
+		echo "Running memory leak test..."; \
+		valgrind --leak-check=full --show-leak-kinds=all ./$(ENHANCED_TARGET); \
+	else \
+		echo "Valgrind not available, skipping memory test"; \
+	fi
+
+# Coverage test (requires gcov)
+coverage: CXXFLAGS += --coverage
+coverage: LDFLAGS += --coverage
+coverage: clean $(ENHANCED_TARGET)
+	./$(ENHANCED_TARGET)
+	gcov $(ENHANCED_SOURCES)
+	@echo "Coverage report generated. Check *.gcov files."
+
+# Clean targets
+clean:
+	rm -f *.o *.gcov *.gcda *.gcno
+
+clean-all: clean
+	rm -f $(ORIGINAL_TARGET) $(ENHANCED_TARGET)
+	rm -f *.vcd *.wlf transcript vsim.wlf
+
+# Install target (copies to system location)
+install: $(ENHANCED_TARGET)
+	@echo "Installing Whitney LPDDR5 SystemC Model..."
+	mkdir -p $(HOME)/bin
+	cp $(ENHANCED_TARGET) $(HOME)/bin/
+	@echo "Installation completed to $(HOME)/bin/"
+
+# Documentation generation (requires doxygen)
+docs:
+	@if command -v doxygen >/dev/null 2>&1; then \
+		echo "Generating documentation..."; \
+		doxygen Doxyfile 2>/dev/null || echo "Doxyfile not found, using default settings"; \
+		echo "Documentation generated in docs/ directory"; \
+	else \
+		echo "Doxygen not available, skipping documentation generation"; \
+	fi
+
+# Lint check (requires cppcheck)
+lint:
+	@if command -v cppcheck >/dev/null 2>&1; then \
+		echo "Running static analysis..."; \
+		cppcheck --enable=all --std=c++11 --suppress=missingIncludeSystem $(ENHANCED_SOURCES); \
+	else \
+		echo "cppcheck not available, skipping lint check"; \
+	fi
+
+# Format code (requires clang-format)
+format:
+	@if command -v clang-format >/dev/null 2>&1; then \
+		echo "Formatting code..."; \
+		clang-format -i *.cpp *.h; \
+		echo "Code formatting completed"; \
+	else \
+		echo "clang-format not available, skipping code formatting"; \
+	fi
+
+# Debug build
+debug: CXXFLAGS += -DDEBUG -O0
+debug: clean $(ENHANCED_TARGET)
+
+# Release build
+release: CXXFLAGS += -DNDEBUG -O3
+release: clean $(ENHANCED_TARGET)
+
+# Help target
+help:
+	@echo "Whitney LPDDR5 SystemC Model - Enhanced Makefile"
+	@echo "================================================"
+	@echo "Available targets:"
+	@echo "  all           - Build both original and enhanced versions"
+	@echo "  $(ORIGINAL_TARGET)    - Build original simulation"
+	@echo "  $(ENHANCED_TARGET) - Build enhanced simulation"
+	@echo "  test          - Run original test"
+	@echo "  test-enhanced - Run enhanced test"
+	@echo "  test-all      - Run both tests"
+	@echo "  verify        - Run comprehensive verification"
+	@echo "  perf-test     - Run performance test"
+	@echo "  mem-test      - Run memory leak test (requires valgrind)"
+	@echo "  coverage      - Generate coverage report (requires gcov)"
+	@echo "  clean         - Remove object files"
+	@echo "  clean-all     - Remove all generated files"
+	@echo "  install       - Install to ~/bin"
+	@echo "  docs          - Generate documentation (requires doxygen)"
+	@echo "  lint          - Run static analysis (requires cppcheck)"
+	@echo "  format        - Format code (requires clang-format)"
+	@echo "  debug         - Build debug version"
+	@echo "  release       - Build optimized release version"
+	@echo "  help          - Show this help"
+	@echo ""
+	@echo "Environment variables:"
+	@echo "  SYSTEMC_HOME  - Path to SystemC installation (default: /usr/local/systemc-2.3.3)"
+
+# Phony targets
+.PHONY: all test test-enhanced test-all verify perf-test mem-test coverage clean clean-all install docs lint format debug release help
+
+# Default goal
+.DEFAULT_GOAL := all
