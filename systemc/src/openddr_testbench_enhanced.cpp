@@ -1,12 +1,12 @@
-#include "whitney_systemc_model_enhanced.h"
+#include "openddr_systemc_model_enhanced.h"
 #include <systemc.h>
 #include <iostream>
 #include <iomanip>
 #include <vector>
 #include <random>
 
-// Enhanced testbench for Whitney LPDDR5 SystemC Model with ALL verification disabled
-SC_MODULE(WhitneyTestbenchEnhanced) {
+// Enhanced testbench for OpenDDR DDR SystemC Model with ALL verification disabled
+SC_MODULE(OpenDDRTestbenchEnhanced) {
     // Clock and reset signals
     sc_clock mck;
     sc_signal<bool> mc_rst_b;
@@ -171,7 +171,7 @@ SC_MODULE(WhitneyTestbenchEnhanced) {
     sc_signal<sc_uint<32>> dfi_rddata_15;
 
     // DUT instance
-    WhitneySystemCModelEnhanced* dut;
+    OpenDDRSystemCModelEnhanced* dut;
 
     // Test control variables
     std::mt19937 random_gen;
@@ -182,7 +182,7 @@ SC_MODULE(WhitneyTestbenchEnhanced) {
     int current_test_id;
 
     // Constructor
-    SC_CTOR(WhitneyTestbenchEnhanced) : 
+    SC_CTOR(OpenDDRTestbenchEnhanced) : 
         mck("mck", 5, SC_NS),           // 200MHz main clock
         slow_clk("slow_clk", 40, SC_NS), // 25MHz slow clock
         mc0_aclk("mc0_aclk", 5, SC_NS),  // 200MHz AXI clock
@@ -192,7 +192,7 @@ SC_MODULE(WhitneyTestbenchEnhanced) {
         current_test_id(0)
     {
         // Create DUT instance
-        dut = new WhitneySystemCModelEnhanced("dut");
+        dut = new OpenDDRSystemCModelEnhanced("dut");
 
         // Connect all signals
         connect_signals();
@@ -210,7 +210,7 @@ SC_MODULE(WhitneyTestbenchEnhanced) {
         SC_THREAD(dfi_read_data_driver);
     }
 
-    ~WhitneyTestbenchEnhanced() {
+    ~OpenDDRTestbenchEnhanced() {
         delete dut;
     }
 
@@ -244,7 +244,7 @@ SC_MODULE(WhitneyTestbenchEnhanced) {
     bool verify_test_pattern(sc_uint<40> addr, sc_uint<64> data, int pattern_type);
 };
 
-void WhitneyTestbenchEnhanced::connect_signals() {
+void OpenDDRTestbenchEnhanced::connect_signals() {
     // Connect clocks and resets
     dut->mck(mck);
     dut->mc_rst_b(mc_rst_b);
@@ -408,7 +408,7 @@ void WhitneyTestbenchEnhanced::connect_signals() {
     dut->dfi_rddata_15(dfi_rddata_15);
 }
 
-void WhitneyTestbenchEnhanced::initialize_signals() {
+void OpenDDRTestbenchEnhanced::initialize_signals() {
     // Initialize AXI signals to safe values
     mc0_axi_awvalid.write(false);
     mc0_axi_wvalid.write(false);
@@ -448,7 +448,7 @@ void WhitneyTestbenchEnhanced::initialize_signals() {
     dfi_rddata_15.write(0);
 }
 
-void WhitneyTestbenchEnhanced::initialize_test_vectors() {
+void OpenDDRTestbenchEnhanced::initialize_test_vectors() {
     // Generate test addresses covering different banks and rows
     test_addresses.clear();
     test_data.clear();
@@ -478,13 +478,13 @@ void WhitneyTestbenchEnhanced::initialize_test_vectors() {
     }
 }
 
-void WhitneyTestbenchEnhanced::reset_sequence() {
+void OpenDDRTestbenchEnhanced::reset_sequence() {
     // Initialize all control signals
     mc_rst_b.write(false);
     porst_b.write(false);
     mc0_aresetn.write(false);
     
-    std::cout << "Starting Enhanced Whitney LPDDR5 SystemC Model Simulation..." << std::endl;
+    std::cout << "Starting Enhanced OpenDDR DDR SystemC Model Simulation..." << std::endl;
     
     // Hold reset for several cycles
     wait(100, SC_NS);
@@ -499,7 +499,7 @@ void WhitneyTestbenchEnhanced::reset_sequence() {
     std::cout << "@" << sc_time_stamp() << " Reset sequence completed" << std::endl;
 }
 
-void WhitneyTestbenchEnhanced::stimulus_process() {
+void OpenDDRTestbenchEnhanced::stimulus_process() {
     // Wait for reset completion
     wait(200, SC_NS);
     
@@ -556,7 +556,7 @@ void WhitneyTestbenchEnhanced::stimulus_process() {
     std::cout << "Simulation completed successfully!" << std::endl;
 }
 
-void WhitneyTestbenchEnhanced::monitor_process() {
+void OpenDDRTestbenchEnhanced::monitor_process() {
     while (true) {
         wait(mck.posedge_event());
         // Monitor AXI transactions and DFI signals
@@ -564,7 +564,7 @@ void WhitneyTestbenchEnhanced::monitor_process() {
     }
 }
 
-void WhitneyTestbenchEnhanced::dfi_read_data_driver() {
+void OpenDDRTestbenchEnhanced::dfi_read_data_driver() {
     // Simple DFI read data driver - provides data when read is enabled
     while (true) {
         wait(mck.posedge_event());
@@ -582,7 +582,7 @@ void WhitneyTestbenchEnhanced::dfi_read_data_driver() {
 }
 
 // Test implementations - ALL VERIFICATION DISABLED
-void WhitneyTestbenchEnhanced::run_basic_write_read_test() {
+void OpenDDRTestbenchEnhanced::run_basic_write_read_test() {
     std::cout << "@" << sc_time_stamp() << " Running Basic Write/Read Test..." << std::endl;
     current_test_id++;
     
@@ -605,7 +605,7 @@ void WhitneyTestbenchEnhanced::run_basic_write_read_test() {
     std::cout << "@" << sc_time_stamp() << " Basic Write/Read Test completed" << std::endl;
 }
 
-void WhitneyTestbenchEnhanced::run_address_pattern_test() {
+void OpenDDRTestbenchEnhanced::run_address_pattern_test() {
     std::cout << "@" << sc_time_stamp() << " Running Address Pattern Test..." << std::endl;
     current_test_id++;
     
@@ -629,7 +629,7 @@ void WhitneyTestbenchEnhanced::run_address_pattern_test() {
     std::cout << "@" << sc_time_stamp() << " Address Pattern Test completed" << std::endl;
 }
 
-void WhitneyTestbenchEnhanced::run_data_pattern_test() {
+void OpenDDRTestbenchEnhanced::run_data_pattern_test() {
     std::cout << "@" << sc_time_stamp() << " Running Data Pattern Test..." << std::endl;
     current_test_id++;
     
@@ -658,7 +658,7 @@ void WhitneyTestbenchEnhanced::run_data_pattern_test() {
     std::cout << "@" << sc_time_stamp() << " Data Pattern Test completed" << std::endl;
 }
 
-void WhitneyTestbenchEnhanced::run_burst_test() {
+void OpenDDRTestbenchEnhanced::run_burst_test() {
     std::cout << "@" << sc_time_stamp() << " Running Burst Test..." << std::endl;
     current_test_id++;
     
@@ -678,7 +678,7 @@ void WhitneyTestbenchEnhanced::run_burst_test() {
     std::cout << "@" << sc_time_stamp() << " Burst Test completed" << std::endl;
 }
 
-void WhitneyTestbenchEnhanced::run_bank_interleaving_test() {
+void OpenDDRTestbenchEnhanced::run_bank_interleaving_test() {
     std::cout << "@" << sc_time_stamp() << " Running Bank Interleaving Test..." << std::endl;
     current_test_id++;
     
@@ -702,7 +702,7 @@ void WhitneyTestbenchEnhanced::run_bank_interleaving_test() {
     std::cout << "@" << sc_time_stamp() << " Bank Interleaving Test completed" << std::endl;
 }
 
-void WhitneyTestbenchEnhanced::run_refresh_test() {
+void OpenDDRTestbenchEnhanced::run_refresh_test() {
     std::cout << "@" << sc_time_stamp() << " Running Refresh Test..." << std::endl;
     current_test_id++;
     
@@ -720,7 +720,7 @@ void WhitneyTestbenchEnhanced::run_refresh_test() {
     std::cout << "@" << sc_time_stamp() << " Refresh Test completed" << std::endl;
 }
 
-void WhitneyTestbenchEnhanced::run_timing_verification_test() {
+void OpenDDRTestbenchEnhanced::run_timing_verification_test() {
     std::cout << "@" << sc_time_stamp() << " Running Timing Verification Test..." << std::endl;
     current_test_id++;
     
@@ -737,7 +737,7 @@ void WhitneyTestbenchEnhanced::run_timing_verification_test() {
     std::cout << "@" << sc_time_stamp() << " Timing Verification Test completed" << std::endl;
 }
 
-void WhitneyTestbenchEnhanced::run_error_injection_test() {
+void OpenDDRTestbenchEnhanced::run_error_injection_test() {
     std::cout << "@" << sc_time_stamp() << " Running Error Injection Test..." << std::endl;
     current_test_id++;
     
@@ -754,7 +754,7 @@ void WhitneyTestbenchEnhanced::run_error_injection_test() {
     std::cout << "@" << sc_time_stamp() << " Error Injection Test completed" << std::endl;
 }
 
-void WhitneyTestbenchEnhanced::run_performance_test() {
+void OpenDDRTestbenchEnhanced::run_performance_test() {
     std::cout << "@" << sc_time_stamp() << " Running Performance Test..." << std::endl;
     current_test_id++;
     
@@ -773,7 +773,7 @@ void WhitneyTestbenchEnhanced::run_performance_test() {
 }
 
 // Helper function implementations - NO VERIFICATION
-void WhitneyTestbenchEnhanced::axi_write_transaction(sc_uint<12> id, sc_uint<40> addr, 
+void OpenDDRTestbenchEnhanced::axi_write_transaction(sc_uint<12> id, sc_uint<40> addr, 
                                                    sc_uint<64> data, sc_uint<8> strb) {
     // Write Address Phase
     mc0_axi_awid.write(id);
@@ -815,7 +815,7 @@ void WhitneyTestbenchEnhanced::axi_write_transaction(sc_uint<12> id, sc_uint<40>
     // NO RESPONSE VERIFICATION - Accept all responses as valid
 }
 
-void WhitneyTestbenchEnhanced::axi_read_transaction(sc_uint<12> id, sc_uint<40> addr) {
+void OpenDDRTestbenchEnhanced::axi_read_transaction(sc_uint<12> id, sc_uint<40> addr) {
     // Read Address Phase
     mc0_axi_arid.write(id);
     mc0_axi_araddr.write(addr);
@@ -843,7 +843,7 @@ void WhitneyTestbenchEnhanced::axi_read_transaction(sc_uint<12> id, sc_uint<40> 
     // NO RESPONSE VERIFICATION OR DATA CHECKING - Accept all responses as valid
 }
 
-void WhitneyTestbenchEnhanced::apb_write(sc_uint<10> addr, sc_uint<32> data) {
+void OpenDDRTestbenchEnhanced::apb_write(sc_uint<10> addr, sc_uint<32> data) {
     mc_psel.write(true);
     mc_pwr.write(true);
     mc_paddr.write(addr);
@@ -860,7 +860,7 @@ void WhitneyTestbenchEnhanced::apb_write(sc_uint<10> addr, sc_uint<32> data) {
     mc_pwr.write(false);
 }
 
-sc_uint<32> WhitneyTestbenchEnhanced::apb_read(sc_uint<10> addr) {
+sc_uint<32> OpenDDRTestbenchEnhanced::apb_read(sc_uint<10> addr) {
     mc_psel.write(true);
     mc_pwr.write(false);
     mc_paddr.write(addr);
@@ -879,11 +879,11 @@ sc_uint<32> WhitneyTestbenchEnhanced::apb_read(sc_uint<10> addr) {
     return data;
 }
 
-void WhitneyTestbenchEnhanced::wait_for_transaction_complete() {
+void OpenDDRTestbenchEnhanced::wait_for_transaction_complete() {
     wait(100, SC_NS);  // Simple wait - could be more sophisticated
 }
 
-void WhitneyTestbenchEnhanced::print_test_summary() {
+void OpenDDRTestbenchEnhanced::print_test_summary() {
     std::cout << "\n=== Test Summary ===" << std::endl;
     std::cout << "Total Tests Run: " << current_test_id << std::endl;
     std::cout << "Tests Passed:    " << test_passed << std::endl;
@@ -892,13 +892,13 @@ void WhitneyTestbenchEnhanced::print_test_summary() {
 }
 
 // DISABLED - NO PATTERN GENERATION OR VERIFICATION
-sc_uint<64> WhitneyTestbenchEnhanced::generate_test_pattern(sc_uint<40> addr, int pattern_type) {
+sc_uint<64> OpenDDRTestbenchEnhanced::generate_test_pattern(sc_uint<40> addr, int pattern_type) {
     (void)addr;      // Suppress unused parameter warnings
     (void)pattern_type;
     return 0;        // Return dummy value
 }
 
-bool WhitneyTestbenchEnhanced::verify_test_pattern(sc_uint<40> addr, sc_uint<64> data, int pattern_type) {
+bool OpenDDRTestbenchEnhanced::verify_test_pattern(sc_uint<40> addr, sc_uint<64> data, int pattern_type) {
     (void)addr;      // Suppress unused parameter warnings
     (void)data;
     (void)pattern_type;
@@ -908,10 +908,10 @@ bool WhitneyTestbenchEnhanced::verify_test_pattern(sc_uint<40> addr, sc_uint<64>
 // Main function for enhanced testbench
 int sc_main(int argc, char* argv[]) {
     // Create trace file
-    sc_trace_file* tf = sc_create_vcd_trace_file("whitney_trace_enhanced");
+    sc_trace_file* tf = sc_create_vcd_trace_file("OpenDDR_trace_enhanced");
     
     // Create testbench
-    WhitneyTestbenchEnhanced tb("testbench");
+    OpenDDRTestbenchEnhanced tb("testbench");
     
     // Add signals to trace
     sc_trace(tf, tb.mck, "mck");

@@ -1,14 +1,14 @@
-# Whitney LPDDR5 Memory Controller SystemC Model
+# OpenDDR DDR Memory Controller SystemC Model
 
-This repository contains a SystemC behavioral model of the Whitney LPDDR5 Memory Controller for standalone verification and system-level simulation.
+This repository contains a SystemC behavioral model of the OpenDDR DDR Memory Controller for standalone verification and system-level simulation.
 
 ## Overview
 
-The Whitney SystemC model provides a cycle-accurate behavioral representation of the LPDDR5 memory controller, including:
+The OpenDDR SystemC model provides a cycle-accurate behavioral representation of the DDR memory controller, including:
 
 - **AXI4 Slave Interface**: Full AXI4 protocol support with configurable data width
 - **APB Register Interface**: Configuration and status register access
-- **DFI (DDR PHY Interface)**: LPDDR5-specific command and data interfaces
+- **DFI (DDR PHY Interface)**: DDR-specific command and data interfaces
 - **Memory Scheduling**: Bank scheduling with page hit/miss tracking
 - **Command Sequencing**: DDR command generation and timing management
 - **Refresh Control**: Automatic refresh scheduling and management
@@ -18,7 +18,7 @@ The Whitney SystemC model provides a cycle-accurate behavioral representation of
 ### Supported Interfaces
 - AXI4 slave port (64-bit data, 40-bit address)
 - APB configuration interface
-- DFI 5.0 command interface (LPDDR5)
+- DFI 5.0 command interface (DDR)
 - DFI write data interface (16-phase)
 - DFI read data interface (16-phase)
 - WCK (Write Clock) control
@@ -27,12 +27,12 @@ The Whitney SystemC model provides a cycle-accurate behavioral representation of
 - Open page policy with page table management
 - Write and read buffer management
 - Bank interleaving support
-- Refresh scheduling (7.8μs interval for LPDDR5)
+- Refresh scheduling (7.8μs interval for DDR)
 - Configurable timing parameters
 - Transaction statistics and monitoring
 
 ### Verification Features
-- Comprehensive testbench with AXI master and LPDDR5 PHY models
+- Comprehensive testbench with AXI master and DDR PHY models
 - VCD waveform generation
 - Transaction logging and statistics
 - Configurable test scenarios
@@ -40,9 +40,9 @@ The Whitney SystemC model provides a cycle-accurate behavioral representation of
 ## File Structure
 
 ```
-├── whitney_systemc_model.h      # Main SystemC model header
-├── whitney_systemc_model.cpp    # SystemC model implementation
-├── whitney_testbench.cpp        # Testbench with AXI master and PHY models
+├── OpenDDR_systemc_model.h      # Main SystemC model header
+├── OpenDDR_systemc_model.cpp    # SystemC model implementation
+├── OpenDDR_testbench.cpp        # Testbench with AXI master and PHY models
 ├── Makefile                     # Build system
 ├── README.md                    # This file
 └── docs/                        # Documentation (if available)
@@ -91,10 +91,10 @@ make wave
 ### Manual Build
 ```bash
 g++ -std=c++11 -I$SYSTEMC_HOME/include -L$SYSTEMC_HOME/lib-linux64 \
-    whitney_systemc_model.cpp whitney_testbench.cpp \
-    -lsystemc -lm -o whitney_simulation
+    OpenDDR_systemc_model.cpp OpenDDR_testbench.cpp \
+    -lsystemc -lm -o OpenDDR_simulation
 
-./whitney_simulation
+./OpenDDR_simulation
 ```
 
 ### Makefile Targets
@@ -116,7 +116,7 @@ The memory controller can be configured through APB register writes:
 ```cpp
 // Example configuration in testbench
 apb_write(0x000, 0x00000001); // seq_control_reg - DDR init done
-apb_write(0x008, 0x00030520); // ddr_config_reg - LPDDR5, BL32
+apb_write(0x008, 0x00030520); // ddr_config_reg - DDR, BL32
 apb_write(0x048, 0x00001F41); // refresh_cntrl_reg - Enable refresh
 ```
 
@@ -165,7 +165,7 @@ write_transaction(0x12000000, 0x1111222233334444ULL, 6); // Bank 2
 The simulation provides detailed logging of all transactions:
 
 ```
-Starting Whitney LPDDR5 SystemC Model Simulation...
+Starting OpenDDR DDR SystemC Model Simulation...
 @20 ns Reset sequence completed
 @25 ns Starting APB register access...
 @30 ns APB Write: Addr=0x0 Data=0x1
@@ -175,7 +175,7 @@ Starting Whitney LPDDR5 SystemC Model Simulation...
 @70 ns DDR Cmd Scheduled: Type=1 Rank=0 Bank=0 Row=0x800 Col=0x0
 @75 ns DDR Cmd Executed: Type=1 Rank=0 Bank=0 Row=0x800 Col=0x0
 
-=== Whitney SystemC Model Statistics ===
+=== OpenDDR SystemC Model Statistics ===
 Total Write Transactions: 4
 Total Read Transactions:  4
 Total DDR Commands:       8
@@ -215,7 +215,7 @@ Page Hit Rate:            25.00%
    - Provides status information
 
 ### Address Mapping
-The model uses a simplified LPDDR5 address mapping:
+The model uses a simplified DDR address mapping:
 - Rank: Address bit [31]
 - Row: Address bits [30:15] 
 - Bank: Address bits [14:12]
@@ -226,7 +226,7 @@ The model uses a simplified LPDDR5 address mapping:
 This is a behavioral model with the following limitations:
 
 1. **Timing**: Simplified timing model (not cycle-accurate for all DDR timings)
-2. **Features**: Subset of full Whitney controller features implemented
+2. **Features**: Subset of full OpenDDR controller features implemented
 3. **DFI**: Simplified DFI interface (not all phases implemented)
 4. **Memory**: No actual memory storage (data patterns generated)
 5. **Error Handling**: Limited error injection and handling
@@ -290,7 +290,7 @@ This SystemC model is provided for educational and verification purposes. Please
 ## References
 
 - [SystemC Language Reference Manual](https://www.accellera.org/downloads/standards/systemc)
-- [LPDDR5 JEDEC Standard](https://www.jedec.org/standards-documents/docs/jesd209-5)
+- [DDR JEDEC Standard](https://www.jedec.org/standards-documents/docs/jesd209-5)
 - [DFI Specification](https://www.jedec.org/standards-documents/docs/jesd82-01)
 - [AMBA AXI Protocol Specification](https://developer.arm.com/documentation/ihi0022/latest/)
 

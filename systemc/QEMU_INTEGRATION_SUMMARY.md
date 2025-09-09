@@ -1,8 +1,8 @@
-# Whitney LPDDR5 SystemC-QEMU Integration Summary
+# OpenDDR DDR SystemC-QEMU Integration Summary
 
 ## Project Overview
 
-This document summarizes the complete QEMU integration implementation for the Whitney LPDDR5 SystemC model, enabling system-level verification with real operating systems and applications.
+This document summarizes the complete QEMU integration implementation for the OpenDDR DDR SystemC model, enabling system-level verification with real operating systems and applications.
 
 ## What Was Created
 
@@ -18,7 +18,7 @@ This document summarizes the complete QEMU integration implementation for the Wh
 - Multi-threaded client handling
 - Graceful error handling and recovery
 
-**WhitneySystemCServer Application** (`whitney_systemc_server.cpp`)
+**OpenDDRSystemCServer Application** (`OpenDDR_systemc_server.cpp`)
 - Standalone server with command-line interface
 - Support for multiple architectures (ARM64, RISC-V, x86_64)
 - Configurable memory sizes and trace generation
@@ -45,7 +45,7 @@ enum MessageType {
 };
 
 // Server Configuration
-./whitney_systemc_server [OPTIONS]
+./OpenDDR_systemc_server [OPTIONS]
   -p, --port PORT          Server port (default: 8888)
   -m, --memory-size SIZE   Memory size in MB (default: 1024)
   -a, --arch ARCH          Target architecture (arm64/riscv64/x86_64)
@@ -90,7 +90,7 @@ make release       # Optimized build
 #### Test Workflow
 ```bash
 # 1. Start SystemC server
-./whitney_systemc_server --port 8888 --memory-size 2048 --arch arm64 &
+./OpenDDR_systemc_server --port 8888 --memory-size 2048 --arch arm64 &
 
 # 2. Test connectivity
 ./test_client --server localhost:8888 --test basic
@@ -122,8 +122,8 @@ qemu-system-aarch64 \
 │     QEMU        │    │   Socket Bridge  │    │   SystemC Model     │
 │                 │    │                  │    │                     │
 │  ┌───────────┐  │    │  ┌─────────────┐ │    │  ┌───────────────┐  │
-│  │    CPU    │  │◄──►│  │   Network   │ │◄──►│  │   Whitney     │  │
-│  │  Cores    │  │    │  │   Server    │ │    │  │   LPDDR5      │  │
+│  │    CPU    │  │◄──►│  │   Network   │ │◄──►│  │   OpenDDR     │  │
+│  │  Cores    │  │    │  │   Server    │ │    │  │   DDR      │  │
 │  └───────────┘  │    │  └─────────────┘ │    │  │   Enhanced    │  │
 │                 │    │                  │    │  │   Model       │  │
 │  ┌───────────┐  │    │  ┌─────────────┐ │    │  └───────────────┘  │
@@ -152,7 +152,7 @@ struct MessageHeader {
 } __attribute__((packed));
 
 struct MemoryRequest {
-    uint64_t address;        // 40-bit LPDDR5 address
+    uint64_t address;        // 40-bit DDR address
     uint32_t size;          // Transfer size (1-64 bytes)
     uint32_t access_type;   // 0=read, 1=write
     uint8_t data[64];       // Data payload
@@ -224,7 +224,7 @@ struct MemoryRequest {
 📊 Transaction rate: 10K-40K ops/sec
 
 # Memory access patterns
-./whitney_systemc_server --trace-file system_trace.vcd
+./OpenDDR_systemc_server --trace-file system_trace.vcd
 📈 Bank utilization analysis
 📈 Page hit/miss ratios
 📈 Refresh timing compliance
@@ -240,7 +240,7 @@ cd systemc/qemu_integration/systemc_bridge
 make all
 
 # 2. Start SystemC server
-./whitney_systemc_server --port 8888 --memory-size 1024 --arch arm64 &
+./OpenDDR_systemc_server --port 8888 --memory-size 1024 --arch arm64 &
 
 # 3. Test functionality
 ./test_client --server localhost:8888 --test basic
@@ -249,13 +249,13 @@ make all
 ./test_client --server localhost:8888 --test performance
 
 # 5. Stop server
-killall whitney_systemc_server
+killall OpenDDR_systemc_server
 ```
 
 ### Advanced Configuration
 ```bash
 # Large memory system with tracing
-./whitney_systemc_server \
+./OpenDDR_systemc_server \
   --port 8888 \
   --memory-size 8192 \
   --arch arm64 \
@@ -263,8 +263,8 @@ killall whitney_systemc_server
   --verbose &
 
 # Multi-architecture testing
-./whitney_systemc_server --port 8889 --arch riscv64 --memory-size 4096 &
-./whitney_systemc_server --port 8890 --arch x86_64 --memory-size 2048 &
+./OpenDDR_systemc_server --port 8889 --arch riscv64 --memory-size 4096 &
+./OpenDDR_systemc_server --port 8890 --arch x86_64 --memory-size 2048 &
 
 # Performance monitoring
 watch -n 1 './test_client --server localhost:8888 --test status'
@@ -331,7 +331,7 @@ qemu-system-riscv64 \
 2. **Distributed Simulation**: Multi-node SystemC clusters
 3. **Machine Learning**: AI-based performance optimization
 4. **Cloud Integration**: AWS/Azure deployment support
-5. **Standards Compliance**: JEDEC LPDDR5X support
+5. **Standards Compliance**: JEDEC DDRX support
 
 ## Benefits Achieved
 
@@ -354,7 +354,7 @@ qemu-system-riscv64 \
 - **System Architecture**: Better system-level optimization
 - **Software Development**: Enhanced driver development
 - **Academic Research**: Educational and research platform
-- **Standards Development**: LPDDR5 specification validation
+- **Standards Development**: DDR specification validation
 
 ## Installation and Deployment
 
@@ -388,7 +388,7 @@ make release
 make install
 
 # 3. Verify installation
-whitney_systemc_server --help
+OpenDDR_systemc_server --help
 test_client --help
 ```
 
@@ -406,7 +406,7 @@ test_client --help
 ### Debug Commands
 ```bash
 # Check server status
-ps aux | grep whitney_systemc_server
+ps aux | grep OpenDDR_systemc_server
 
 # Test connectivity
 telnet localhost 8888
@@ -415,7 +415,7 @@ telnet localhost 8888
 netstat -tulpn | grep 8888
 
 # Check memory usage
-top -p $(pgrep whitney_systemc_server)
+top -p $(pgrep OpenDDR_systemc_server)
 
 # Analyze traces
 gtkwave system_trace.vcd
@@ -423,7 +423,7 @@ gtkwave system_trace.vcd
 
 ## Conclusion
 
-The Whitney LPDDR5 SystemC-QEMU integration represents a significant advancement in system-level memory verification. The implementation provides:
+The OpenDDR DDR SystemC-QEMU integration represents a significant advancement in system-level memory verification. The implementation provides:
 
 ### Technical Excellence
 - **Professional Architecture**: Robust, scalable design
@@ -443,6 +443,6 @@ The Whitney LPDDR5 SystemC-QEMU integration represents a significant advancement
 - **Performance Analysis**: Detailed system characterization
 - **Educational Value**: Learning platform for memory systems
 
-This integration transforms the Whitney LPDDR5 SystemC model from a standalone verification tool into a comprehensive system-level verification platform, enabling unprecedented insight into memory system behavior in real-world scenarios.
+This integration transforms the OpenDDR DDR SystemC model from a standalone verification tool into a comprehensive system-level verification platform, enabling unprecedented insight into memory system behavior in real-world scenarios.
 
-The combination of accurate LPDDR5 modeling, robust communication infrastructure, and comprehensive testing framework creates a powerful platform for memory controller development, system optimization, and educational applications.
+The combination of accurate DDR modeling, robust communication infrastructure, and comprehensive testing framework creates a powerful platform for memory controller development, system optimization, and educational applications.

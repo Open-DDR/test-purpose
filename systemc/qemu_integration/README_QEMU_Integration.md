@@ -1,8 +1,8 @@
-# QEMU Integration Guide for Whitney LPDDR5 SystemC Model
+# QEMU Integration Guide for OpenDDR DDR SystemC Model
 
 ## Overview
 
-This guide explains how to interface the Whitney LPDDR5 SystemC model with QEMU for comprehensive system-level testing. The integration allows QEMU to use the SystemC model as a realistic memory backend, enabling full software stack testing with accurate LPDDR5 behavior.
+This guide explains how to interface the OpenDDR DDR SystemC model with QEMU for comprehensive system-level testing. The integration allows QEMU to use the SystemC model as a realistic memory backend, enabling full software stack testing with accurate DDR behavior.
 
 ## Integration Architecture
 
@@ -11,8 +11,8 @@ This guide explains how to interface the Whitney LPDDR5 SystemC model with QEMU 
 │     QEMU        │    │   Socket Bridge  │    │   SystemC Model     │
 │                 │    │                  │    │                     │
 │  ┌───────────┐  │    │  ┌─────────────┐ │    │  ┌───────────────┐  │
-│  │    CPU    │  │    │  │   Memory    │ │    │  │   Whitney     │  │
-│  │           │  │◄──►│  │   Manager   │ │◄──►│  │   LPDDR5      │  │
+│  │    CPU    │  │    │  │   Memory    │ │    │  │   OpenDDR     │  │
+│  │           │  │◄──►│  │   Manager   │ │◄──►│  │   DDR      │  │
 │  └───────────┘  │    │  │             │ │    │  │   Model       │  │
 │                 │    │  └─────────────┘ │    │  └───────────────┘  │
 │  ┌───────────┐  │    │                  │    │                     │
@@ -36,13 +36,13 @@ make all
 
 ```bash
 # Start SystemC server
-./whitney_systemc_server --port 8888 --memory-size 1024 --arch arm64 &
+./OpenDDR_systemc_server --port 8888 --memory-size 1024 --arch arm64 &
 
 # Test connectivity
 ./test_client --server localhost:8888 --test basic
 
 # Stop server
-killall whitney_systemc_server
+killall OpenDDR_systemc_server
 ```
 
 ### 3. Run Example Test
@@ -60,7 +60,7 @@ qemu_integration/
 ├── systemc_bridge/                # SystemC-QEMU bridge implementation
 │   ├── qemu_systemc_bridge.h      # Bridge header file
 │   ├── qemu_systemc_bridge.cpp    # Bridge implementation
-│   ├── whitney_systemc_server.cpp # Standalone server application
+│   ├── OpenDDR_systemc_server.cpp # Standalone server application
 │   ├── test_client.cpp            # Test client for validation
 │   └── Makefile                   # Build system
 └── examples/                      # Example scripts and tests
@@ -80,12 +80,12 @@ The main bridge class that interfaces between QEMU and the SystemC model:
 - **SystemC Interface**: Translates requests to AXI transactions
 - **Statistics**: Tracks performance and error metrics
 
-### 2. WhitneySystemCServer Class
+### 2. OpenDDRSystemCServer Class
 
 Standalone server application with command-line interface:
 
 ```bash
-./whitney_systemc_server [OPTIONS]
+./OpenDDR_systemc_server [OPTIONS]
 
 Options:
   -p, --port PORT          Server port (default: 8888)
@@ -123,7 +123,7 @@ struct MessageHeader {
 
 ```bash
 # 1. Start SystemC server
-./whitney_systemc_server --port 8888 --memory-size 2048 --arch arm64 &
+./OpenDDR_systemc_server --port 8888 --memory-size 2048 --arch arm64 &
 
 # 2. Run QEMU (conceptual - requires SystemC backend support)
 qemu-system-aarch64 \
@@ -144,7 +144,7 @@ qemu-system-aarch64 \
 
 ```bash
 # SystemC server for RISC-V
-./whitney_systemc_server --port 8889 --arch riscv64 --memory-size 4096 &
+./OpenDDR_systemc_server --port 8889 --arch riscv64 --memory-size 4096 &
 
 # QEMU RISC-V (conceptual)
 qemu-system-riscv64 \
@@ -162,7 +162,7 @@ qemu-system-riscv64 \
 
 ```bash
 # SystemC server for x86
-./whitney_systemc_server --port 8890 --arch x86_64 --memory-size 8192 &
+./OpenDDR_systemc_server --port 8890 --arch x86_64 --memory-size 8192 &
 
 # QEMU x86 (conceptual)
 qemu-system-x86_64 \
@@ -247,10 +247,10 @@ The bridge has been validated to provide:
 ./test_client --server localhost:8888 --test status
 
 # Generate performance report
-./whitney_systemc_server --port 8888 --profile --profile-file perf.json
+./OpenDDR_systemc_server --port 8888 --profile --profile-file perf.json
 
 # Collect memory traces
-./whitney_systemc_server --port 8888 --trace-file memory.vcd
+./OpenDDR_systemc_server --port 8888 --trace-file memory.vcd
 ```
 
 ### Common Issues and Solutions
@@ -346,7 +346,7 @@ make all
 make install
 
 # Verify installation
-whitney_systemc_server --help
+OpenDDR_systemc_server --help
 ```
 
 ## Troubleshooting
@@ -370,7 +370,7 @@ sudo apt-get install build-essential libsystemc-dev
 ```bash
 # Port already in use
 netstat -tulpn | grep 8888
-killall whitney_systemc_server
+killall OpenDDR_systemc_server
 
 # Permission denied
 sudo sysctl net.ipv4.ip_local_port_range="1024 65535"
@@ -410,7 +410,7 @@ For questions and support:
 
 ## Conclusion
 
-The QEMU-SystemC integration provides a powerful platform for system-level verification of LPDDR5 memory controllers. While there is a performance overhead, the ability to run real operating systems and applications with accurate memory modeling provides invaluable verification capabilities that cannot be achieved with traditional testbenches alone.
+The QEMU-SystemC integration provides a powerful platform for system-level verification of DDR memory controllers. While there is a performance overhead, the ability to run real operating systems and applications with accurate memory modeling provides invaluable verification capabilities that cannot be achieved with traditional testbenches alone.
 
 Key benefits:
 - **Complete System Verification**: Test entire software stacks
@@ -419,4 +419,4 @@ Key benefits:
 - **Performance Characterization**: Measure real-world performance impact
 - **Power Analysis**: Estimate power consumption of real workloads
 
-The combination of QEMU's system emulation capabilities with the Whitney LPDDR5 SystemC model's accurate memory modeling creates a comprehensive verification environment suitable for both functional verification and performance analysis.
+The combination of QEMU's system emulation capabilities with the OpenDDR DDR SystemC model's accurate memory modeling creates a comprehensive verification environment suitable for both functional verification and performance analysis.

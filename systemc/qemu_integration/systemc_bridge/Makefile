@@ -1,4 +1,4 @@
-# Makefile for Whitney LPDDR5 SystemC-QEMU Bridge
+# Makefile for openddr DDR SystemC-QEMU Bridge
 
 # SystemC installation path - adjust as needed
 SYSTEMC_HOME ?= /aws/home/jayb/systemc-2.3.3
@@ -12,18 +12,18 @@ LDFLAGS = -L$(SYSTEMC_HOME)/lib-$(SYSTEMC_ARCH) -pthread
 LIBS = -lsystemc -lm
 
 # Source files
-BRIDGE_SOURCES = qemu_systemc_bridge.cpp whitney_systemc_server.cpp
+BRIDGE_SOURCES = qemu_systemc_bridge.cpp openddr_systemc_server.cpp
 BRIDGE_OBJECTS = $(BRIDGE_SOURCES:.cpp=.o)
 
 # Enhanced SystemC model sources (from ../src) - Using verification disabled version
-MODEL_SOURCES = ../../src/whitney_systemc_model_verification_disabled.cpp
+MODEL_SOURCES = ../../src/openddr_systemc_model_verification_disabled.cpp
 MODEL_OBJECTS = $(MODEL_SOURCES:.cpp=.o)
 
 # All objects
 ALL_OBJECTS = $(BRIDGE_OBJECTS) $(MODEL_OBJECTS)
 
 # Executables
-SERVER_TARGET = whitney_systemc_server
+SERVER_TARGET = openddr_systemc_server
 TEST_CLIENT_TARGET = test_client
 
 # Default target
@@ -46,8 +46,8 @@ $(TEST_CLIENT_TARGET): test_client.o
 	$(CXX) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
 
 # Dependencies
-qemu_systemc_bridge.o: qemu_systemc_bridge.cpp qemu_systemc_bridge.h ../../src/whitney_systemc_model_enhanced.h
-whitney_systemc_server.o: whitney_systemc_server.cpp qemu_systemc_bridge.h
+qemu_systemc_bridge.o: qemu_systemc_bridge.cpp qemu_systemc_bridge.h ../../src/openddr_systemc_model_enhanced.h
+openddr_systemc_server.o: openddr_systemc_server.cpp qemu_systemc_bridge.h
 test_client.o: test_client.cpp qemu_systemc_bridge.h
 
 # Test targets
@@ -92,7 +92,7 @@ release: clean $(SERVER_TARGET) $(TEST_CLIENT_TARGET)
 
 # Install target
 install: $(SERVER_TARGET)
-	@echo "Installing Whitney SystemC Server..."
+	@echo "Installing openddr SystemC Server..."
 	mkdir -p $(HOME)/bin
 	cp $(SERVER_TARGET) $(HOME)/bin/
 	@echo "Installation completed to $(HOME)/bin/"
@@ -136,7 +136,7 @@ format:
 
 # Help target
 help:
-	@echo "Whitney LPDDR5 SystemC-QEMU Bridge - Makefile"
+	@echo "openddr DDR SystemC-QEMU Bridge - Makefile"
 	@echo "=============================================="
 	@echo "Available targets:"
 	@echo "  all           - Build server and test client"

@@ -9,8 +9,8 @@
 │     QEMU        │    │   Socket Bridge  │    │   SystemC Model     │
 │                 │    │                  │    │                     │
 │  ┌───────────┐  │    │  ┌─────────────┐ │    │  ┌───────────────┐  │
-│  │    CPU    │  │    │  │   Memory    │ │    │  │   Whitney     │  │
-│  │ ARM64/x86 │  │◄──►│  │   Manager   │ │◄──►│  │   LPDDR5      │  │
+│  │    CPU    │  │    │  │   Memory    │ │    │  │   OpenDDR     │  │
+│  │ ARM64/x86 │  │◄──►│  │   Manager   │ │◄──►│  │   DDR      │  │
 │  │  RISC-V   │  │    │  │             │ │    │  │   Model       │  │
 │  └───────────┘  │    │  └─────────────┘ │    │  └───────────────┘  │
 │                 │    │                  │    │                     │
@@ -32,6 +32,6 @@
 2. QEMU memory subsystem receives request
 3. Request sent via TCP socket to Bridge
 4. Bridge converts to AXI transaction
-5. SystemC model processes with LPDDR5 timing
+5. SystemC model processes with DDR timing
 6. Response sent back through Bridge
 7. QEMU receives response and continues execution

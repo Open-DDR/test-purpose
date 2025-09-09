@@ -1,4 +1,4 @@
-# Queue Overflow Fix - Whitney LPDDR5 SystemC Integration
+# Queue Overflow Fix - OpenDDR DDR SystemC Integration
 
 ## Problem Description
 
@@ -16,7 +16,7 @@ The queue overflow errors occurred because the test client was sending memory re
 
 1. **High Request Rate**: The performance test sent 50 operations as fast as possible
 2. **No Pacing**: Requests were sent microseconds apart
-3. **SystemC Processing Time**: The Whitney LPDDR5 model processes requests with realistic LPDDR5 timing (10-50μs per operation)
+3. **SystemC Processing Time**: The OpenDDR DDR model processes requests with realistic DDR timing (10-50μs per operation)
 4. **Queue Saturation**: The AXI transaction queues in the SystemC model became overwhelmed
 
 ## Solution Implemented
@@ -88,13 +88,13 @@ The fix has been tested and verified to:
 - ✅ Eliminate queue overflow errors
 - ✅ Complete performance tests successfully  
 - ✅ Generate clean VCD trace files
-- ✅ Maintain realistic LPDDR5 timing behavior
+- ✅ Maintain realistic DDR timing behavior
 - ✅ Provide meaningful performance metrics
 
 ## Key Takeaways
 
 ### 1. SystemC Model Characteristics
-- The Whitney LPDDR5 model is **cycle-accurate** and processes requests with realistic timing
+- The OpenDDR DDR model is **cycle-accurate** and processes requests with realistic timing
 - Internal AXI queues have **finite capacity** and require proper flow control
 - **Pacing is essential** when interfacing with realistic memory models
 
@@ -127,11 +127,11 @@ The fix has been tested and verified to:
 ### For Video Creation
 - **Mention the fix**: Explain that queue management is important
 - **Show clean execution**: Demonstrate error-free operation
-- **Explain timing**: Emphasize cycle-accurate LPDDR5 behavior
+- **Explain timing**: Emphasize cycle-accurate DDR behavior
 
 ### For Users
 - **Use provided scripts**: The updated scripts include proper pacing
-- **Understand timing**: Expect realistic LPDDR5 response times
+- **Understand timing**: Expect realistic DDR response times
 - **Monitor VCD files**: Check traces for proper timing behavior
 
 ### For Developers  
@@ -139,4 +139,4 @@ The fix has been tested and verified to:
 - **Respect model limits**: Don't assume infinite queue capacity
 - **Test incrementally**: Start with small operation counts and increase gradually
 
-This fix transforms the integration from a proof-of-concept to a **production-ready verification environment** that properly respects the cycle-accurate nature of the Whitney LPDDR5 SystemC model.
+This fix transforms the integration from a proof-of-concept to a **production-ready verification environment** that properly respects the cycle-accurate nature of the OpenDDR DDR SystemC model.

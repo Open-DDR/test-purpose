@@ -1,15 +1,15 @@
-# Whitney LPDDR5 SystemC Model Enhancement Summary
+# OpenDDR DDR SystemC Model Enhancement Summary
 
 ## Project Overview
 
-This document summarizes the comprehensive enhancements made to the Whitney LPDDR5 SystemC model to support realistic data/address verification for LPDDR5 memory controller validation.
+This document summarizes the comprehensive enhancements made to the OpenDDR DDR SystemC model to support realistic data/address verification for DDR memory controller validation.
 
 ## What Was Enhanced
 
-### 1. Enhanced SystemC Model (`whitney_systemc_model_enhanced.h/cpp`)
+### 1. Enhanced SystemC Model (`OpenDDR_systemc_model_enhanced.h/cpp`)
 
 #### Core Improvements:
-- **Realistic Address Mapping**: Implemented proper LPDDR5 address decoding with bank, row, and column extraction
+- **Realistic Address Mapping**: Implemented proper DDR address decoding with bank, row, and column extraction
 - **Timing Verification**: Added comprehensive timing checks for tRCD, tRP, tRAS, tWR, and refresh cycles
 - **Data Integrity**: Implemented write/read data verification with pattern checking and error detection
 - **Performance Monitoring**: Added bandwidth, latency, and efficiency tracking
@@ -37,7 +37,7 @@ bool validate_address_range(sc_uint<40> addr);
 void report_timing_violation(int bank_id, CommandType cmd);
 ```
 
-### 2. Comprehensive Testbench (`whitney_testbench_enhanced.cpp`)
+### 2. Comprehensive Testbench (`OpenDDR_testbench_enhanced.cpp`)
 
 #### Test Suite Coverage:
 1. **Basic Write/Read Tests**: Fundamental memory operations with data verification
@@ -103,7 +103,7 @@ coverage: $(ENHANCED_TARGET)
 
 ## Technical Specifications
 
-### LPDDR5 Address Mapping
+### DDR Address Mapping
 ```
 40-bit Address Format:
 [39:32] - Reserved (8 bits)
@@ -113,7 +113,7 @@ coverage: $(ENHANCED_TARGET)
 [2:0]   - Byte Select (3 bits) - 8 bytes
 ```
 
-### Timing Parameters (LPDDR5-6400)
+### Timing Parameters (DDR-6400)
 ```cpp
 tCK     = 0.625ns   // Clock period (1600 MHz)
 tRCD    = 18ns      // RAS to CAS delay
@@ -139,7 +139,7 @@ tRFC    = 280ns     // Refresh cycle time
 - **Coverage Tracking**: Ensures all data patterns and addresses are tested
 
 ### Address Verification
-- **Range Checking**: Validates addresses are within valid LPDDR5 ranges
+- **Range Checking**: Validates addresses are within valid DDR ranges
 - **Alignment Verification**: Ensures proper address alignment for different access sizes
 - **Bank Mapping**: Verifies correct bank, row, column extraction
 - **Boundary Testing**: Tests address boundaries and edge cases
@@ -165,13 +165,13 @@ export SYSTEMC_HOME=/path/to/systemc-2.3.3
 
 # Build enhanced model
 cd systemc/src
-make -f Makefile_enhanced whitney_simulation_enhanced
+make -f Makefile_enhanced OpenDDR_simulation_enhanced
 
 # Run comprehensive verification
 make -f Makefile_enhanced verify
 
 # View results
-gtkwave whitney_trace_enhanced.vcd
+gtkwave OpenDDR_trace_enhanced.vcd
 ```
 
 ### Advanced Testing
@@ -191,7 +191,7 @@ make -f Makefile_enhanced lint
 
 ### Custom Test Development
 ```cpp
-// Add to WhitneyTestbenchEnhanced class
+// Add to OpenDDRTestbenchEnhanced class
 void run_custom_verification_test() {
     std::cout << "Running Custom Verification..." << std::endl;
     
@@ -222,13 +222,13 @@ void run_custom_verification_test() {
 ## Benefits Achieved
 
 ### 1. Realistic Verification
-- **True LPDDR5 Behavior**: Model now behaves like actual LPDDR5 memory
+- **True DDR Behavior**: Model now behaves like actual DDR memory
 - **Accurate Timing**: Proper timing constraints and verification
 - **Real Address Mapping**: Correct bank, row, column address handling
 - **Data Integrity**: Comprehensive data verification capabilities
 
 ### 2. Comprehensive Coverage
-- **Functional Coverage**: All LPDDR5 operations and scenarios
+- **Functional Coverage**: All DDR operations and scenarios
 - **Corner Case Testing**: Boundary conditions and error cases
 - **Performance Testing**: Bandwidth and latency verification
 - **Stress Testing**: High-frequency and sustained traffic scenarios
@@ -240,7 +240,7 @@ void run_custom_verification_test() {
 - **Error Localization**: Precise error location and cause identification
 
 ### 4. Professional Quality
-- **Industry Standards**: Follows LPDDR5 and SystemC best practices
+- **Industry Standards**: Follows DDR and SystemC best practices
 - **Maintainable Code**: Well-structured, documented, and modular
 - **Extensible Design**: Easy to add new features and tests
 - **Build System**: Professional build and test infrastructure
@@ -250,13 +250,13 @@ void run_custom_verification_test() {
 The enhanced model has been validated to provide:
 
 ### ✅ Functional Correctness
-- All basic LPDDR5 operations work correctly
-- Address mapping matches LPDDR5 specification
+- All basic DDR operations work correctly
+- Address mapping matches DDR specification
 - Data integrity is maintained across all operations
 - Protocol compliance verified
 
 ### ✅ Timing Accuracy
-- All LPDDR5 timing constraints properly implemented
+- All DDR timing constraints properly implemented
 - Timing violations correctly detected and reported
 - Refresh operations properly timed and executed
 - Bank timing constraints enforced
@@ -278,7 +278,7 @@ The enhanced model has been validated to provide:
 The enhanced model provides a solid foundation for future improvements:
 
 ### Planned Additions
-- **LPDDR5X Support**: Extended features and higher speeds
+- **DDRX Support**: Extended features and higher speeds
 - **Power Modeling**: Detailed power consumption analysis
 - **Temperature Effects**: Thermal impact on timing and performance
 - **Advanced Error Correction**: ECC and other error correction schemes
@@ -292,17 +292,17 @@ The enhanced model provides a solid foundation for future improvements:
 
 ## Conclusion
 
-The Whitney LPDDR5 SystemC model has been successfully enhanced to provide comprehensive, realistic verification capabilities for LPDDR5 memory controllers. The enhancements include:
+The OpenDDR DDR SystemC model has been successfully enhanced to provide comprehensive, realistic verification capabilities for DDR memory controllers. The enhancements include:
 
-1. **Realistic LPDDR5 Behavior**: Proper address mapping, timing, and protocol implementation
-2. **Comprehensive Test Suite**: Nine different test categories covering all aspects of LPDDR5 operation
+1. **Realistic DDR Behavior**: Proper address mapping, timing, and protocol implementation
+2. **Comprehensive Test Suite**: Nine different test categories covering all aspects of DDR operation
 3. **Professional Infrastructure**: Enhanced build system, documentation, and debugging capabilities
 4. **Verification Quality**: Industry-standard verification methodology and coverage
 
 The enhanced model is now suitable for:
-- **Memory Controller Verification**: Comprehensive validation of LPDDR5 controllers
+- **Memory Controller Verification**: Comprehensive validation of DDR controllers
 - **System-Level Simulation**: Integration into larger SoC simulation environments
 - **Performance Analysis**: Detailed bandwidth, latency, and efficiency analysis
-- **Educational Use**: Learning and understanding LPDDR5 memory systems
+- **Educational Use**: Learning and understanding DDR memory systems
 
-This enhancement transforms the basic SystemC model into a professional-grade verification platform capable of supporting realistic LPDDR5 memory controller development and validation.
+This enhancement transforms the basic SystemC model into a professional-grade verification platform capable of supporting realistic DDR memory controller development and validation.

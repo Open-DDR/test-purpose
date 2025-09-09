@@ -1,8 +1,8 @@
-# Whitney LPDDR5 SystemC Model - Enhanced Version
+# OpenDDR DDR SystemC Model - Enhanced Version
 
 ## Overview
 
-This enhanced SystemC model provides comprehensive verification capabilities for LPDDR5 memory controllers. It includes realistic data/address verification, timing checks, performance monitoring, and extensive test coverage.
+This enhanced SystemC model provides comprehensive verification capabilities for DDR memory controllers. It includes realistic data/address verification, timing checks, performance monitoring, and extensive test coverage.
 
 ## Features
 
@@ -31,14 +31,14 @@ This enhanced SystemC model provides comprehensive verification capabilities for
 
 ```
 systemc/src/
-├── whitney_systemc_model_enhanced.h     # Enhanced model header
-├── whitney_systemc_model_enhanced.cpp   # Enhanced model implementation
-├── whitney_testbench_enhanced.cpp       # Comprehensive testbench
+├── OpenDDR_systemc_model_enhanced.h     # Enhanced model header
+├── OpenDDR_systemc_model_enhanced.cpp   # Enhanced model implementation
+├── OpenDDR_testbench_enhanced.cpp       # Comprehensive testbench
 ├── Makefile_enhanced                    # Enhanced build system
 ├── README_enhanced.md                   # This documentation
-├── whitney_systemc_model.h              # Original model header
-├── whitney_systemc_model.cpp            # Original model implementation
-├── whitney_testbench.cpp                # Original testbench
+├── OpenDDR_systemc_model.h              # Original model header
+├── OpenDDR_systemc_model.cpp            # Original model implementation
+├── OpenDDR_testbench.cpp                # Original testbench
 └── Makefile                            # Original Makefile
 ```
 
@@ -53,7 +53,7 @@ systemc/src/
 
 ```bash
 # Build enhanced version
-make -f Makefile_enhanced whitney_simulation_enhanced
+make -f Makefile_enhanced OpenDDR_simulation_enhanced
 
 # Build both original and enhanced versions
 make -f Makefile_enhanced all
@@ -109,12 +109,12 @@ make -f Makefile_enhanced lint
 
 ### Waveform Analysis
 The simulation generates VCD trace files:
-- `whitney_trace_enhanced.vcd` - Enhanced model waveforms
-- `whitney_trace.vcd` - Original model waveforms
+- `OpenDDR_trace_enhanced.vcd` - Enhanced model waveforms
+- `OpenDDR_trace.vcd` - Original model waveforms
 
 View with any VCD viewer (GTKWave, ModelSim, etc.):
 ```bash
-gtkwave whitney_trace_enhanced.vcd
+gtkwave OpenDDR_trace_enhanced.vcd
 ```
 
 ### Performance Metrics
@@ -139,7 +139,7 @@ The test suite covers:
 
 ### Address Mapping
 ```
-LPDDR5 Address Format (40-bit):
+DDR Address Format (40-bit):
 [39:32] - Reserved
 [31:16] - Row Address
 [15:6]  - Column Address
@@ -149,7 +149,7 @@ LPDDR5 Address Format (40-bit):
 
 ### Timing Parameters
 ```cpp
-// LPDDR5-6400 Timing (example)
+// DDR-6400 Timing (example)
 tCK     = 0.625ns   // Clock period
 tRCD    = 18ns      // RAS to CAS delay
 tRP     = 21ns      // Row precharge time
@@ -205,7 +205,7 @@ The verification tracks:
 
 ### Adding New Tests
 
-1. Add test function to `WhitneyTestbenchEnhanced` class:
+1. Add test function to `OpenDDRTestbenchEnhanced` class:
 ```cpp
 void run_custom_test() {
     std::cout << "Running Custom Test..." << std::endl;
@@ -221,9 +221,9 @@ run_custom_test();
 
 ### Modifying Timing Parameters
 
-Edit the timing constants in `whitney_systemc_model_enhanced.cpp`:
+Edit the timing constants in `OpenDDR_systemc_model_enhanced.cpp`:
 ```cpp
-// Modify these values for different LPDDR5 speeds
+// Modify these values for different DDR speeds
 static const sc_time T_RCD = sc_time(18, SC_NS);
 static const sc_time T_RP  = sc_time(21, SC_NS);
 static const sc_time T_RAS = sc_time(42, SC_NS);
@@ -302,7 +302,7 @@ Compatible with:
 ## Future Enhancements
 
 ### Planned Features
-- [ ] LPDDR5X support
+- [ ] DDRX support
 - [ ] Advanced power modeling
 - [ ] Temperature effects simulation
 - [ ] Wear leveling algorithms
@@ -320,7 +320,7 @@ Compatible with:
 
 ### Documentation
 - SystemC User Guide
-- LPDDR5 JEDEC Standard (JESD209-5)
+- DDR JEDEC Standard (JESD209-5)
 - DFI Specification
 - AXI Protocol Specification
 
@@ -331,7 +331,7 @@ Compatible with:
 
 ## License
 
-This enhanced SystemC model is provided under the same license terms as the original Whitney LPDDR5 model. Please refer to the license file for detailed terms and conditions.
+This enhanced SystemC model is provided under the same license terms as the original OpenDDR DDR model. Please refer to the license file for detailed terms and conditions.
 
 ## Changelog
 
@@ -343,7 +343,7 @@ This enhanced SystemC model is provided under the same license terms as the orig
 - Improved documentation and examples
 
 ### Version 1.0 (Original)
-- Basic LPDDR5 functionality
+- Basic DDR functionality
 - Simple testbench
 - Basic AXI and DFI interfaces
 

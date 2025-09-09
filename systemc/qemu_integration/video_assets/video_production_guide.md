@@ -37,7 +37,7 @@
   ```bash
   cd systemc/qemu_integration/systemc_bridge
   make all
-  ./whitney_systemc_server --port 8888 --memory-size 1024 --arch arm64 &
+  ./OpenDDR_systemc_server --port 8888 --memory-size 1024 --arch arm64 &
   ./test_client --server localhost:8888 --test basic
   cd ../examples && ./run_arm64_test.sh
   ```
@@ -48,7 +48,7 @@
 - **Content:** Show key source files
 - **Files to highlight:**
   - qemu_systemc_bridge.h/cpp
-  - whitney_systemc_server.cpp
+  - OpenDDR_systemc_server.cpp
   - test_client.cpp
 
 #### Segment 5: Performance Analysis (Scene 6)
@@ -138,7 +138,7 @@
 
 ### Scene 4: Code Components (3 minutes)
 - **9:00-10:00:** QemuSystemCBridge class explanation
-- **10:00-11:00:** WhitneySystemCServer walkthrough
+- **10:00-11:00:** OpenDDRSystemCServer walkthrough
 - **11:00-12:00:** Communication protocol details
 
 ### Scene 5: Advanced Usage (4 minutes)
@@ -208,9 +208,9 @@
 4. **GitHub** - Link in repository README
 
 ### Metadata
-- **Title:** "Whitney LPDDR5 SystemC - QEMU Integration Guide"
+- **Title:** "OpenDDR DDR SystemC - QEMU Integration Guide"
 - **Description:** Include key points and links
-- **Tags:** systemc, qemu, lpddr5, verification, hardware, simulation
+- **Tags:** systemc, qemu, DDR, verification, hardware, simulation
 - **Thumbnail:** Architecture diagram or key slide
 
 ## Timeline Estimate

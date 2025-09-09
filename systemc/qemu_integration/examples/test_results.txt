@@ -1,32 +1,32 @@
-[0;32mWhitney LPDDR5 SystemC + QEMU ARM64 Test[0m
+[0;32mOpenDDR DDR SystemC + QEMU ARM64 Test[0m
 ==========================================
-[1;33mStarting Whitney SystemC server...[0m
+[1;33mStarting OpenDDR SystemC server...[0m
 SystemC server started with PID: 252549
-Whitney LPDDR5 SystemC Server Configuration:
+OpenDDR DDR SystemC Server Configuration:
   Port:         8888
   Memory Size:  1024 MB
   Architecture: arm64
-  Trace File:   whitney_arm64_trace.vcd
+  Trace File:   OpenDDR_arm64_trace.vcd
   Verbose:      No
   Daemon:       No
 
 QemuSystemCBridge initialized on port 8888
-Setting up VCD tracing to: whitney_arm64_trace.vcd
+Setting up VCD tracing to: OpenDDR_arm64_trace.vcd
 VCD tracing setup complete
-Starting Whitney LPDDR5 SystemC Server...
+Starting OpenDDR DDR SystemC Server...
 Listening on port 8888
 Press Ctrl+C to stop
 
 Starting SystemC simulation thread...
 SystemC-QEMU bridge server started on port 8888
-Whitney SystemC Server running...
+OpenDDR SystemC Server running...
 Press Ctrl+C to stop
 Dedicated server thread started, listening for connections...
 Server thread loop iteration, checking for connections...
 Active client threads: 0
 Calling accept() on server socket 3...
 
-Info: (I702) default timescale unit used for tracing: 1 ps (whitney_arm64_trace.vcd)
+Info: (I702) default timescale unit used for tracing: 1 ps (OpenDDR_arm64_trace.vcd)
 SystemC bridge initialization complete
 @210 ns AXI Write Addr: ID=0000 Addr=0x00000001000 Len=0 Size=0
 @2220 ns AXI Read Addr: ID=00c8 Addr=0x00000002640 Len=0 Size=0
@@ -28798,10 +28798,10 @@ Client connection closed or receive failed
 Client disconnected, socket 6 closed
 
 [0;32mARM64 test completed![0m
-SystemC trace saved to: whitney_arm64_trace.vcd
+SystemC trace saved to: OpenDDR_arm64_trace.vcd
 
 To view the trace:
-  gtkwave whitney_arm64_trace.vcd
+  gtkwave OpenDDR_arm64_trace.vcd
 
 [1;33mCleaning up...[0m
 @27019610 ns AXI Read Addr: ID=0320 Addr=0x00000003900 Len=0 Size=0

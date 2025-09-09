@@ -1,4 +1,4 @@
-# Enhanced Makefile for Whitney LPDDR5 SystemC Model
+# Enhanced Makefile for openddr DDR SystemC Model
 # Supports both original and enhanced versions
 
 # SystemC installation path - adjust as needed
@@ -13,16 +13,16 @@ LDFLAGS = -L$(SYSTEMC_HOME)/lib-$(SYSTEMC_ARCH)
 LIBS = -lsystemc -lm
 
 # Source files
-ORIGINAL_SOURCES = whitney_systemc_model.cpp whitney_testbench.cpp
-ENHANCED_SOURCES = whitney_systemc_model_enhanced.cpp whitney_testbench_enhanced.cpp
+ORIGINAL_SOURCES = openddr_systemc_model.cpp openddr_testbench.cpp
+ENHANCED_SOURCES = openddr_systemc_model_enhanced.cpp openddr_testbench_enhanced.cpp
 
 # Object files
 ORIGINAL_OBJECTS = $(ORIGINAL_SOURCES:.cpp=.o)
 ENHANCED_OBJECTS = $(ENHANCED_SOURCES:.cpp=.o)
 
 # Executables
-ORIGINAL_TARGET = whitney_simulation
-ENHANCED_TARGET = whitney_simulation_enhanced
+ORIGINAL_TARGET = openddr_simulation
+ENHANCED_TARGET = openddr_simulation_enhanced
 
 # Default target
 all: $(ORIGINAL_TARGET) $(ENHANCED_TARGET)
@@ -40,11 +40,11 @@ $(ENHANCED_TARGET): $(ENHANCED_OBJECTS)
 	$(CXX) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
 
 # Dependencies
-whitney_systemc_model.o: whitney_systemc_model.cpp whitney_systemc_model.h
-whitney_testbench.o: whitney_testbench.cpp whitney_systemc_model.h
+openddr_systemc_model.o: openddr_systemc_model.cpp openddr_systemc_model.h
+openddr_testbench.o: openddr_testbench.cpp openddr_systemc_model.h
 
-whitney_systemc_model_enhanced.o: whitney_systemc_model_enhanced.cpp whitney_systemc_model_enhanced.h
-whitney_testbench_enhanced.o: whitney_testbench_enhanced.cpp whitney_systemc_model_enhanced.h
+openddr_systemc_model_enhanced.o: openddr_systemc_model_enhanced.cpp openddr_systemc_model_enhanced.h
+openddr_testbench_enhanced.o: openddr_testbench_enhanced.cpp openddr_systemc_model_enhanced.h
 
 # Test targets
 test: $(ORIGINAL_TARGET)
@@ -58,9 +58,9 @@ test-all: test test-enhanced
 
 # Verification targets
 verify: $(ENHANCED_TARGET)
-	@echo "Running comprehensive LPDDR5 verification..."
+	@echo "Running comprehensive DDR verification..."
 	./$(ENHANCED_TARGET)
-	@echo "Verification completed. Check whitney_trace_enhanced.vcd for waveforms."
+	@echo "Verification completed. Check openddr_trace_enhanced.vcd for waveforms."
 
 # Performance test
 perf-test: $(ENHANCED_TARGET)
@@ -94,7 +94,7 @@ clean-all: clean
 
 # Install target (copies to system location)
 install: $(ENHANCED_TARGET)
-	@echo "Installing Whitney LPDDR5 SystemC Model..."
+	@echo "Installing openddr DDR SystemC Model..."
 	mkdir -p $(HOME)/bin
 	cp $(ENHANCED_TARGET) $(HOME)/bin/
 	@echo "Installation completed to $(HOME)/bin/"
@@ -138,7 +138,7 @@ release: clean $(ENHANCED_TARGET)
 
 # Help target
 help:
-	@echo "Whitney LPDDR5 SystemC Model - Enhanced Makefile"
+	@echo "openddr DDR SystemC Model - Enhanced Makefile"
 	@echo "================================================"
 	@echo "Available targets:"
 	@echo "  all           - Build both original and enhanced versions"

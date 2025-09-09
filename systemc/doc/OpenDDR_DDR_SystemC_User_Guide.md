@@ -1,4 +1,4 @@
-# Whitney LPDDR5 Memory Controller SystemC Model
+# OpenDDR DDR Memory Controller SystemC Model
 ## User Guide v1.0
 
 ---
@@ -24,9 +24,9 @@
 
 ## Introduction
 
-### What is the Whitney LPDDR5 SystemC Model?
+### What is the OpenDDR DDR SystemC Model?
 
-The Whitney LPDDR5 SystemC Model is a high-fidelity behavioral model of the Whitney Memory Controller designed for system-level verification and performance analysis. This model enables customers to:
+The OpenDDR DDR SystemC Model is a high-fidelity behavioral model of the OpenDDR Memory Controller designed for system-level verification and performance analysis. This model enables customers to:
 
 - **Verify System Integration**: Test the memory controller within larger SoC designs
 - **Analyze Performance**: Evaluate memory subsystem performance under various workloads
@@ -60,7 +60,7 @@ Before you begin, ensure you have:
 - [ ] SystemC 2.3.3 or later installed
 - [ ] GCC 4.8+ or equivalent C++11 compiler
 - [ ] Basic understanding of SystemC and memory controller concepts
-- [ ] Whitney LPDDR5 SystemC model files
+- [ ] OpenDDR DDR SystemC model files
 
 ### 5-Minute Quick Start
 
@@ -77,7 +77,7 @@ Before you begin, ensure you have:
    ```bash
    make run
    ```
-5. **View results** in the console output and `whitney_trace.vcd` file
+5. **View results** in the console output and `OpenDDR_trace.vcd` file
 
 ---
 
@@ -141,8 +141,8 @@ export SYSTEMC_HOME=/usr
 
 1. **Extract Model Files**:
    ```bash
-   tar -xzf whitney_lpddr5_systemc_model.tar.gz
-   cd whitney_lpddr5_systemc_model
+   tar -xzf OpenDDR_DDR_systemc_model.tar.gz
+   cd OpenDDR_DDR_systemc_model
    ```
 
 2. **Verify Installation**:
@@ -172,11 +172,11 @@ sudo yum install gtkwave
 
 ### Architecture Overview
 
-The Whitney LPDDR5 SystemC Model consists of several key components:
+The OpenDDR DDR SystemC Model consists of several key components:
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                    Whitney SystemC Model                    │
+│                    OpenDDR SystemC Model                    │
 ├─────────────────┬─────────────────┬─────────────────────────┤
 │   AXI Interface │  APB Interface  │    DFI Interface        │
 │                 │                 │                         │
@@ -202,7 +202,7 @@ The Whitney LPDDR5 SystemC Model consists of several key components:
 ### Key Features
 
 #### Memory Controller Features
-- **LPDDR5 Support**: Full LPDDR5 protocol compliance
+- **DDR Support**: Full DDR protocol compliance
 - **Multi-Bank Operation**: Up to 8 banks with independent timing
 - **Open Page Policy**: Optimized for sequential access patterns
 - **Refresh Management**: Automatic refresh scheduling and execution
@@ -211,7 +211,7 @@ The Whitney LPDDR5 SystemC Model consists of several key components:
 #### Interface Features
 - **AXI4 Slave**: 64-bit data width, 40-bit address space
 - **APB Configuration**: Full register access for configuration and monitoring
-- **DFI 5.0**: Complete DDR PHY Interface for LPDDR5
+- **DFI 5.0**: Complete DDR PHY Interface for DDR
 - **WCK Control**: Write Clock management for high-speed operation
 
 #### Verification Features
@@ -226,7 +226,7 @@ The Whitney LPDDR5 SystemC Model consists of several key components:
 
 ### AXI4 Slave Interface
 
-The Whitney model implements a full AXI4 slave interface with the following specifications:
+The OpenDDR model implements a full AXI4 slave interface with the following specifications:
 
 #### Signal List
 | Signal Name | Width | Direction | Description |
@@ -286,7 +286,7 @@ The Whitney model implements a full AXI4 slave interface with the following spec
 
 ### DFI Interface
 
-The DFI (DDR PHY Interface) provides the connection to the LPDDR5 PHY:
+The DFI (DDR PHY Interface) provides the connection to the DDR PHY:
 
 #### Command Interface
 | Signal Name | Width | Description |
@@ -317,7 +317,7 @@ The DFI (DDR PHY Interface) provides the connection to the LPDDR5 PHY:
 
 ### Register Map
 
-The Whitney model provides a comprehensive register interface for configuration and monitoring:
+The OpenDDR model provides a comprehensive register interface for configuration and monitoring:
 
 #### Core Configuration Registers
 
@@ -353,11 +353,11 @@ The Whitney model provides a comprehensive register interface for configuration 
 
 ### Configuration Examples
 
-#### Basic LPDDR5 Configuration
+#### Basic DDR Configuration
 
 ```cpp
-// Configure for LPDDR5 operation
-apb_write(0x008, 0x00030520);  // DDR_CONFIG: LPDDR5, BL32, 64-bit
+// Configure for DDR operation
+apb_write(0x008, 0x00030520);  // DDR_CONFIG: DDR, BL32, 64-bit
 apb_write(0x000, 0x00000001);  // SEQ_CONTROL: Enable sequencer
 apb_write(0x048, 0x00001F41);  // REFRESH_CNTRL: Enable refresh, 7.8us
 
@@ -397,7 +397,7 @@ export SYSTEMC_HOME=/usr/local/systemc-2.3.3
 export LD_LIBRARY_PATH=$SYSTEMC_HOME/lib-linux64:$LD_LIBRARY_PATH
 
 # Navigate to model directory
-cd whitney_lpddr5_systemc_model
+cd OpenDDR_DDR_systemc_model
 ```
 
 #### Step 2: Build the Model
@@ -415,13 +415,13 @@ make
 #### Step 3: Run Simulation
 ```bash
 # Run with default testbench
-./whitney_simulation
+./OpenDDR_simulation
 
 # Run with custom parameters
-./whitney_simulation +trace +verbose
+./OpenDDR_simulation +trace +verbose
 
 # Run with specific test duration
-./whitney_simulation +max_time=1000ns
+./OpenDDR_simulation +max_time=1000ns
 ```
 
 #### Step 4: Analyze Results
@@ -430,7 +430,7 @@ make
 less simulation.log
 
 # View waveforms
-gtkwave whitney_trace.vcd
+gtkwave OpenDDR_trace.vcd
 
 # Analyze performance statistics
 grep "Statistics" simulation.log
@@ -444,19 +444,19 @@ The simulation executable supports several command line options:
 
 | Option | Description | Example |
 |--------|-------------|---------|
-| +trace | Enable VCD tracing | `./whitney_simulation +trace` |
-| +verbose | Enable verbose logging | `./whitney_simulation +verbose` |
-| +max_time=<time> | Set simulation time limit | `./whitney_simulation +max_time=500ns` |
-| +seed=<value> | Set random seed | `./whitney_simulation +seed=12345` |
-| +config=<file> | Load configuration file | `./whitney_simulation +config=test.cfg` |
+| +trace | Enable VCD tracing | `./OpenDDR_simulation +trace` |
+| +verbose | Enable verbose logging | `./OpenDDR_simulation +verbose` |
+| +max_time=<time> | Set simulation time limit | `./OpenDDR_simulation +max_time=500ns` |
+| +seed=<value> | Set random seed | `./OpenDDR_simulation +seed=12345` |
+| +config=<file> | Load configuration file | `./OpenDDR_simulation +config=test.cfg` |
 
 #### Environment Variables
 
 | Variable | Description | Default |
 |----------|-------------|---------|
-| WHITNEY_LOG_LEVEL | Logging verbosity (0-3) | 1 |
-| WHITNEY_TRACE_FILE | VCD trace filename | whitney_trace.vcd |
-| WHITNEY_MAX_CYCLES | Maximum simulation cycles | 100000 |
+| OpenDDR_LOG_LEVEL | Logging verbosity (0-3) | 1 |
+| OpenDDR_TRACE_FILE | VCD trace filename | OpenDDR_trace.vcd |
+| OpenDDR_MAX_CYCLES | Maximum simulation cycles | 100000 |
 
 ### Custom Test Scenarios
 
@@ -464,7 +464,7 @@ The simulation executable supports several command line options:
 
 1. **Modify the testbench**:
    ```cpp
-   // In whitney_testbench.cpp, modify stimulus_process()
+   // In OpenDDR_testbench.cpp, modify stimulus_process()
    void AXIMaster::stimulus_process() {
        // Your custom test sequence here
        write_transaction(0x10000000, 0x123456789ABCDEF0ULL, 1);
@@ -487,7 +487,7 @@ The simulation executable supports several command line options:
 3. **Build and run**:
    ```bash
    make clean && make
-   ./whitney_simulation +config=test_config.cfg
+   ./OpenDDR_simulation +config=test_config.cfg
    ```
 
 #### Predefined Test Scenarios
@@ -503,8 +503,8 @@ The model includes several predefined test scenarios:
 
 To run a specific test:
 ```bash
-./whitney_simulation +test=burst_test
-./whitney_simulation +test=performance_test
+./OpenDDR_simulation +test=burst_test
+./OpenDDR_simulation +test=performance_test
 ```
 
 ---
@@ -517,28 +517,28 @@ To run a specific test:
 
 1. **Include the model header**:
    ```cpp
-   #include "whitney_systemc_model.h"
+   #include "OpenDDR_systemc_model.h"
    ```
 
 2. **Instantiate the model**:
    ```cpp
-   WhitneySystemCModel whitney_mc("whitney_mc");
+   OpenDDRSystemCModel OpenDDR_mc("OpenDDR_mc");
    ```
 
 3. **Connect interfaces**:
    ```cpp
    // Connect clocks and resets
-   whitney_mc.mck(system_clock);
-   whitney_mc.mc_rst_b(system_reset_n);
+   OpenDDR_mc.mck(system_clock);
+   OpenDDR_mc.mc_rst_b(system_reset_n);
    
    // Connect AXI interface
-   whitney_mc.mc0_axi_awaddr(axi_awaddr);
-   whitney_mc.mc0_axi_awvalid(axi_awvalid);
+   OpenDDR_mc.mc0_axi_awaddr(axi_awaddr);
+   OpenDDR_mc.mc0_axi_awvalid(axi_awvalid);
    // ... connect all AXI signals
    
    // Connect APB interface
-   whitney_mc.mc_paddr(apb_paddr);
-   whitney_mc.mc_psel(apb_psel);
+   OpenDDR_mc.mc_paddr(apb_paddr);
+   OpenDDR_mc.mc_psel(apb_psel);
    // ... connect all APB signals
    ```
 
@@ -548,14 +548,14 @@ For complex SoC integration, consider these patterns:
 
 1. **Wrapper Module**:
    ```cpp
-   SC_MODULE(WhitneyWrapper) {
+   SC_MODULE(OpenDDRWrapper) {
        // Additional logic for protocol conversion
        // Clock domain crossing
        // Power management
        
-       WhitneySystemCModel whitney_core;
+       OpenDDRSystemCModel OpenDDR_core;
        
-       SC_CTOR(WhitneyWrapper) : whitney_core("core") {
+       SC_CTOR(OpenDDRWrapper) : OpenDDR_core("core") {
            // Connect and configure
        }
    };
@@ -564,8 +564,8 @@ For complex SoC integration, consider these patterns:
 2. **Multi-Instance Integration**:
    ```cpp
    // For multi-channel memory systems
-   WhitneySystemCModel whitney_ch0("whitney_ch0");
-   WhitneySystemCModel whitney_ch1("whitney_ch1");
+   OpenDDRSystemCModel OpenDDR_ch0("OpenDDR_ch0");
+   OpenDDRSystemCModel OpenDDR_ch1("OpenDDR_ch1");
    
    // Implement channel arbitration logic
    ```
@@ -576,8 +576,8 @@ For complex SoC integration, consider these patterns:
 
 1. **Extend the register map**:
    ```cpp
-   // In whitney_systemc_model.cpp
-   sc_uint<32> WhitneySystemCModel::read_register(sc_uint<10> addr) {
+   // In OpenDDR_systemc_model.cpp
+   sc_uint<32> OpenDDRSystemCModel::read_register(sc_uint<10> addr) {
        switch (addr.to_uint()) {
            // Existing registers...
            case 0x100: return my_custom_reg;  // Add custom register
@@ -594,7 +594,7 @@ For complex SoC integration, consider these patterns:
    dont_initialize();
    
    // Implementation
-   void WhitneySystemCModel::my_custom_process() {
+   void OpenDDRSystemCModel::my_custom_process() {
        // Custom functionality
    }
    ```
@@ -602,7 +602,7 @@ For complex SoC integration, consider these patterns:
 3. **Modify timing behavior**:
    ```cpp
    // Customize timing parameters
-   void WhitneySystemCModel::configure_timing() {
+   void OpenDDRSystemCModel::configure_timing() {
        // Load timing from configuration file
        // Implement temperature/voltage scaling
        // Add process variation modeling
@@ -624,7 +624,7 @@ public:
 
 // Usage in model
 ConfigManager config;
-config.load_config("whitney_config.json");
+config.load_config("OpenDDR_config.json");
 tCL = config.get_timing_param("tCL");
 ```
 
@@ -635,9 +635,9 @@ tCL = config.get_timing_param("tCL");
 1. **Reduce logging verbosity**:
    ```cpp
    #ifdef FAST_SIM
-   #define WHITNEY_LOG(x) // Disable logging
+   #define OpenDDR_LOG(x) // Disable logging
    #else
-   #define WHITNEY_LOG(x) std::cout << x << std::endl
+   #define OpenDDR_LOG(x) std::cout << x << std::endl
    #endif
    ```
 
@@ -663,7 +663,7 @@ tCL = config.get_timing_param("tCL");
 
 ### Built-in Performance Metrics
 
-The Whitney model automatically collects various performance metrics:
+The OpenDDR model automatically collects various performance metrics:
 
 #### Transaction Statistics
 - **Total Write Transactions**: Number of AXI write transactions processed
@@ -688,17 +688,17 @@ The Whitney model automatically collects various performance metrics:
 
 ```cpp
 // Enable statistics collection
-whitney.enable_statistics(true);
+OpenDDR.enable_statistics(true);
 
 // Run simulation
 sc_start(1000, SC_NS);
 
 // Print statistics
-whitney.print_statistics();
+OpenDDR.print_statistics();
 
 // Get specific metrics
-uint32_t page_hits = whitney.get_page_hits();
-uint32_t page_misses = whitney.get_page_misses();
+uint32_t page_hits = OpenDDR.get_page_hits();
+uint32_t page_misses = OpenDDR.get_page_misses();
 double hit_rate = (double)page_hits / (page_hits + page_misses);
 ```
 
@@ -748,7 +748,7 @@ public:
 3. **Burst Optimization**: Use appropriate burst lengths
    ```cpp
    // Configure for optimal burst length
-   apb_write(DDR_CONFIG, 0x00030520);  // BL32 for LPDDR5
+   apb_write(DDR_CONFIG, 0x00030520);  // BL32 for DDR
    ```
 
 #### Configuration Tuning
@@ -768,8 +768,8 @@ public:
 
 3. **Timing Optimization**:
    ```cpp
-   // Optimize timing for specific LPDDR5 device
-   configure_device_timing("LPDDR5-6400");
+   // Optimize timing for specific DDR device
+   configure_device_timing("DDR-6400");
    ```
 
 ### Benchmarking and Validation
@@ -785,9 +785,9 @@ The model includes several standard memory benchmarks:
 
 Run benchmarks:
 ```bash
-./whitney_simulation +benchmark=stream
-./whitney_simulation +benchmark=random_access
-./whitney_simulation +benchmark=mixed_workload
+./OpenDDR_simulation +benchmark=stream
+./OpenDDR_simulation +benchmark=random_access
+./OpenDDR_simulation +benchmark=mixed_workload
 ```
 
 #### Custom Benchmarks
@@ -826,9 +826,9 @@ private:
 
 ### Overview
 
-The Whitney LPDDR5 SystemC Model includes a comprehensive QEMU integration framework that enables the model to serve as a memory backend for QEMU virtual machines. This integration allows for:
+The OpenDDR DDR SystemC Model includes a comprehensive QEMU integration framework that enables the model to serve as a memory backend for QEMU virtual machines. This integration allows for:
 
-- **Full System Simulation**: Run complete ARM64 systems with Whitney memory controller
+- **Full System Simulation**: Run complete ARM64 systems with OpenDDR memory controller
 - **Software Development**: Test drivers and applications in realistic environments
 - **Performance Analysis**: Analyze memory subsystem behavior under real workloads
 - **Hardware-Software Co-verification**: Validate both hardware and software components
@@ -857,9 +857,9 @@ The QEMU integration consists of several key components:
                                 │
                                 ▼
 ┌─────────────────────────────────────────────────────────────┐
-│                Whitney SystemC Model                        │
+│                OpenDDR SystemC Model                        │
 │                                                             │
-│  Enhanced model with full LPDDR5 simulation capabilities   │
+│  Enhanced model with full DDR simulation capabilities   │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -890,7 +890,7 @@ The QEMU integration consists of several key components:
 Ensure you have the following components installed:
 
 ```bash
-# SystemC (required for Whitney model)
+# SystemC (required for OpenDDR model)
 export SYSTEMC_HOME=/usr/local/systemc-2.3.3
 
 # QEMU with SystemC backend support (conceptual - requires custom QEMU build)
@@ -911,7 +911,7 @@ export SYSTEMC_HOME=/usr/local/systemc-2.3.3
 
 3. **Verify the build**:
    ```bash
-   ls -la whitney_systemc_server test_client
+   ls -la OpenDDR_systemc_server test_client
    ```
 
 #### Testing the Integration
@@ -924,9 +924,9 @@ export SYSTEMC_HOME=/usr/local/systemc-2.3.3
 
 2. **Expected output**:
    ```
-   Whitney LPDDR5 SystemC + QEMU ARM64 Test
+   OpenDDR DDR SystemC + QEMU ARM64 Test
    ==========================================
-   Starting Whitney SystemC server...
+   Starting OpenDDR SystemC server...
    SystemC server started with PID: XXXXX
    
    Testing SystemC server connectivity...
@@ -942,18 +942,18 @@ export SYSTEMC_HOME=/usr/local/systemc-2.3.3
 
 #### Server Configuration
 
-The Whitney SystemC server supports various configuration options:
+The OpenDDR SystemC server supports various configuration options:
 
 ```bash
 # Basic server startup
-./whitney_systemc_server --port 8888 --memory-size 1024 --arch arm64
+./OpenDDR_systemc_server --port 8888 --memory-size 1024 --arch arm64
 
 # Advanced configuration
-./whitney_systemc_server \
+./OpenDDR_systemc_server \
     --port 8888 \
     --memory-size 2048 \
     --arch arm64 \
-    --trace-file whitney_trace.vcd \
+    --trace-file OpenDDR_trace.vcd \
     --verbose \
     --daemon
 ```
@@ -994,7 +994,7 @@ The communication protocol supports various message types:
 
 int main() {
     // Create and configure the server
-    WhitneySystemCServer server(8888, 1024*1024*1024, "arm64");
+    OpenDDRSystemCServer server(8888, 1024*1024*1024, "arm64");
     
     // Start the server
     server.run();
@@ -1123,7 +1123,7 @@ Error: Failed to bind server socket
 netstat -tlnp | grep 8888
 
 # Use a different port
-./whitney_systemc_server --port 9999
+./OpenDDR_systemc_server --port 9999
 ```
 
 **Issue**: Client connection timeout
@@ -1131,7 +1131,7 @@ netstat -tlnp | grep 8888
 Failed to connect to SystemC server
 ```
 **Solution**:
-1. Verify server is running: `ps aux | grep whitney_systemc_server`
+1. Verify server is running: `ps aux | grep OpenDDR_systemc_server`
 2. Check firewall settings: `sudo ufw status`
 3. Test connectivity: `telnet localhost 8888`
 
@@ -1142,13 +1142,13 @@ Write response: status=1 (error)
 **Solution**:
 1. Check address ranges
 2. Verify memory size configuration
-3. Enable verbose logging: `./whitney_systemc_server --verbose`
+3. Enable verbose logging: `./OpenDDR_systemc_server --verbose`
 
 #### Debug Features
 
 1. **Verbose Logging**: Enable detailed operation logging
    ```bash
-   ./whitney_systemc_server --verbose
+   ./OpenDDR_systemc_server --verbose
    ```
 
 2. **Network Debugging**: Monitor network traffic
@@ -1162,7 +1162,7 @@ Write response: status=1 (error)
 
 3. **SystemC Tracing**: Generate VCD traces for analysis
    ```bash
-   ./whitney_systemc_server --trace-file debug_trace.vcd
+   ./OpenDDR_systemc_server --trace-file debug_trace.vcd
    gtkwave debug_trace.vcd
    ```
 
@@ -1314,8 +1314,8 @@ export LD_LIBRARY_PATH=$SYSTEMC_HOME/lib-linux64:$LD_LIBRARY_PATH
 **Solution**:
 1. Enable VCD tracing:
    ```bash
-   ./whitney_simulation +trace
-   gtkwave whitney_trace.vcd
+   ./OpenDDR_simulation +trace
+   gtkwave OpenDDR_trace.vcd
    ```
 2. Check configuration registers
 3. Verify timing parameters
@@ -1338,8 +1338,8 @@ export LD_LIBRARY_PATH=$SYSTEMC_HOME/lib-linux64:$LD_LIBRARY_PATH
 2. Verify pointer initialization
 3. Use debugging tools:
    ```bash
-   gdb ./whitney_simulation
-   valgrind ./whitney_simulation
+   gdb ./OpenDDR_simulation
+   valgrind ./OpenDDR_simulation
    ```
 
 **Issue**: Memory leaks
@@ -1348,7 +1348,7 @@ export LD_LIBRARY_PATH=$SYSTEMC_HOME/lib-linux64:$LD_LIBRARY_PATH
 2. Verify object cleanup
 3. Use memory profiling:
    ```bash
-   valgrind --leak-check=full ./whitney_simulation
+   valgrind --leak-check=full ./OpenDDR_simulation
    ```
 
 ### Debug Features
@@ -1359,7 +1359,7 @@ The model supports multiple logging levels:
 
 ```cpp
 // Set logging level
-export WHITNEY_LOG_LEVEL=3
+export OpenDDR_LOG_LEVEL=3
 
 // Levels:
 // 0 = Errors only
@@ -1431,7 +1431,7 @@ When reporting issues, please provide:
 
 3. **Runtime Log**:
    ```bash
-   ./whitney_simulation +verbose 2>&1 | tee runtime.log
+   ./OpenDDR_simulation +verbose 2>&1 | tee runtime.log
    ```
 
 4. **Configuration**:
@@ -1443,11 +1443,11 @@ When reporting issues, please provide:
 
 ## API Reference
 
-### WhitneySystemCModel Class
+### OpenDDRSystemCModel Class
 
 #### Constructor
 ```cpp
-WhitneySystemCModel(sc_module_name name);
+OpenDDRSystemCModel(sc_module_name name);
 ```
 
 #### Public Methods
@@ -1495,7 +1495,7 @@ struct MemoryConfig {
     uint32_t num_ranks;
     uint32_t page_size;
     uint32_t burst_length;
-    MemoryType type;   // LPDDR5, LPDDR4X, etc.
+    MemoryType type;   // DDR, LPDDR4X, etc.
 };
 ```
 
@@ -1510,8 +1510,8 @@ enum TransactionType {
 
 enum MemoryType {
     LPDDR4X,
-    LPDDR5,
-    LPDDR5X
+    DDR,
+    DDRX
 };
 
 enum LogLevel {
@@ -1544,13 +1544,13 @@ public:
 };
 ```
 
-#### LPDDR5PHY Class
+#### DDRPHY Class
 
 ```cpp
-class LPDDR5PHY : public sc_module {
+class DDRPHY : public sc_module {
 public:
     // Constructor
-    SC_CTOR(LPDDR5PHY);
+    SC_CTOR(DDRPHY);
     
     // Configuration methods
     void configure_device(const DeviceConfig& config);
@@ -1569,7 +1569,7 @@ public:
 ### Example 1: Basic Memory Test
 
 ```cpp
-#include "whitney_systemc_model.h"
+#include "OpenDDR_systemc_model.h"
 
 int sc_main(int argc, char* argv[]) {
     // Create clock and reset
@@ -1577,15 +1577,15 @@ int sc_main(int argc, char* argv[]) {
     sc_signal<bool> rst_n;
     
     // Create model instance
-    WhitneySystemCModel whitney("whitney");
+    OpenDDRSystemCModel OpenDDR("OpenDDR");
     
     // Connect basic signals
-    whitney.mck(clk);
-    whitney.mc_rst_b(rst_n);
+    OpenDDR.mck(clk);
+    OpenDDR.mc_rst_b(rst_n);
     
     // Configure model
-    whitney.configure_timing(lpddr5_timing);
-    whitney.enable_statistics(true);
+    OpenDDR.configure_timing(DDR_timing);
+    OpenDDR.enable_statistics(true);
     
     // Reset sequence
     rst_n = false;
@@ -1596,7 +1596,7 @@ int sc_main(int argc, char* argv[]) {
     sc_start(1000, SC_NS);
     
     // Print results
-    whitney.print_statistics();
+    OpenDDR.print_statistics();
     
     return 0;
 }
@@ -1607,7 +1607,7 @@ int sc_main(int argc, char* argv[]) {
 ```cpp
 class PerformanceBenchmark {
 private:
-    WhitneySystemCModel* whitney;
+    OpenDDRSystemCModel* OpenDDR;
     AXIMaster* axi_master;
     
 public:
@@ -1684,17 +1684,17 @@ void configure_for_mobile_application() {
         .num_ranks = 1,
         .page_size = 4096,
         .burst_length = 32,
-        .type = LPDDR5
+        .type = DDR
     };
     
     // Apply configuration
-    whitney.configure_timing(mobile_timing);
-    whitney.configure_memory(mobile_memory);
+    OpenDDR.configure_timing(mobile_timing);
+    OpenDDR.configure_memory(mobile_memory);
     
     // Enable power-saving features
-    whitney.enable_feature("auto_precharge", true);
-    whitney.enable_feature("power_down", true);
-    whitney.enable_feature("self_refresh", true);
+    OpenDDR.enable_feature("auto_precharge", true);
+    OpenDDR.enable_feature("power_down", true);
+    OpenDDR.enable_feature("self_refresh", true);
 }
 
 void configure_for_high_performance() {
@@ -1711,12 +1711,12 @@ void configure_for_high_performance() {
     };
     
     // Apply configuration
-    whitney.configure_timing(perf_timing);
+    OpenDDR.configure_timing(perf_timing);
     
     // Enable performance features
-    whitney.enable_feature("command_queue", true);
-    whitney.enable_feature("bank_interleaving", true);
-    whitney.enable_feature("prefetch", true);
+    OpenDDR.enable_feature("command_queue", true);
+    OpenDDR.enable_feature("bank_interleaving", true);
+    OpenDDR.enable_feature("prefetch", true);
 }
 ```
 
@@ -1726,15 +1726,15 @@ void configure_for_high_performance() {
 class MultiChannelSystem {
 private:
     static const int NUM_CHANNELS = 4;
-    WhitneySystemCModel* channels[NUM_CHANNELS];
+    OpenDDRSystemCModel* channels[NUM_CHANNELS];
     ChannelArbiter* arbiter;
     
 public:
     void setup_system() {
         // Create multiple memory channels
         for (int i = 0; i < NUM_CHANNELS; i++) {
-            std::string name = "whitney_ch" + std::to_string(i);
-            channels[i] = new WhitneySystemCModel(name.c_str());
+            std::string name = "OpenDDR_ch" + std::to_string(i);
+            channels[i] = new OpenDDRSystemCModel(name.c_str());
             
             // Configure each channel
             configure_channel(channels[i], i);
@@ -1769,7 +1769,7 @@ public:
 ```cpp
 class MemoryDriver {
 private:
-    WhitneySystemCModel* whitney;
+    OpenDDRSystemCModel* OpenDDR;
     uint32_t base_address;
     
 public:
@@ -1779,7 +1779,7 @@ public:
         write_register(SEQ_CONTROL, 0x00000000);  // Reset
         wait(100, SC_NS);
         
-        // Configure for LPDDR5
+        // Configure for DDR
         write_register(DDR_CONFIG, 0x00030520);
         write_register(REFRESH_CNTRL, 0x00001F41);
         
@@ -1839,7 +1839,7 @@ private:
     }
     
     void load_timing_parameters() {
-        // Load LPDDR5 timing parameters
+        // Load DDR timing parameters
         write_register(AC_TIMING_REG1, 0x120E1215);  // tCL=18, tWL=14, tRCD=18, tRP=21
         write_register(AC_TIMING_REG2, 0x2A3F1008);  // tRAS=42, tRC=63, tRRD=16, tFAW=8
         write_register(AC_TIMING_REG3, 0x08040820);  // tWTR=8, tRTP=4, tCCD=8, tBL=32
@@ -1848,7 +1848,7 @@ private:
     
     bool verify_initialization() {
         uint32_t status = read_register(PMU_STATUS);
-        return (status & 0x30) == 0x30;  // Check sequencer type = LPDDR5x
+        return (status & 0x30) == 0x30;  // Check sequencer type = DDRx
     }
 };
 ```
@@ -1859,10 +1859,10 @@ private:
 
 ### Technical Support
 
-For technical support with the Whitney LPDDR5 SystemC Model, please use the following resources:
+For technical support with the OpenDDR DDR SystemC Model, please use the following resources:
 
 #### Documentation and Resources
-- **User Guide**: This document (Whitney_LPDDR5_SystemC_User_Guide.md)
+- **User Guide**: This document (OpenDDR_DDR_SystemC_User_Guide.md)
 - **API Reference**: Complete API documentation in Section 11
 - **Example Code**: Reference implementations in Section 12
 - **README**: Basic setup and usage instructions
@@ -1880,7 +1880,7 @@ Before contacting technical support, please:
 
 When contacting support, please provide:
 
-1. **Model Version**: Whitney LPDDR5 SystemC Model v1.0
+1. **Model Version**: OpenDDR DDR SystemC Model v1.0
 2. **System Information**: OS, compiler version, SystemC version
 3. **Issue Description**: Detailed description of the problem
 4. **Reproduction Steps**: Step-by-step instructions to reproduce the issue
@@ -1891,7 +1891,7 @@ When contacting support, please provide:
 
 - **Email Support**: systemc-support@company.com
 - **Online Portal**: https://support.company.com/systemc
-- **Knowledge Base**: https://kb.company.com/whitney-systemc
+- **Knowledge Base**: https://kb.company.com/OpenDDR-systemc
 
 ### Frequently Asked Questions (FAQ)
 
@@ -1903,8 +1903,8 @@ A: The SystemC model is a behavioral model optimized for system-level simulation
 **Q: Can I use this model for silicon validation?**
 A: This model is intended for system-level verification and software development. For silicon validation, please use the RTL implementation.
 
-**Q: What LPDDR5 features are supported?**
-A: The model supports core LPDDR5 features including BL32, multi-bank operation, refresh management, and DFI interface. See Section 4 for detailed feature list.
+**Q: What DDR features are supported?**
+A: The model supports core DDR features including BL32, multi-bank operation, refresh management, and DFI interface. See Section 4 for detailed feature list.
 
 #### Installation and Setup
 
@@ -1944,8 +1944,8 @@ A: Yes, the model supports multi-instance usage. See Example 4 in Section 12 for
 #### Available Training Materials
 
 1. **SystemC Fundamentals**: Introduction to SystemC modeling concepts
-2. **Memory Controller Architecture**: Understanding LPDDR5 and memory controller design
-3. **Model Usage Workshop**: Hands-on training with the Whitney SystemC model
+2. **Memory Controller Architecture**: Understanding DDR and memory controller design
+3. **Model Usage Workshop**: Hands-on training with the OpenDDR SystemC model
 4. **Advanced Customization**: Deep dive into model customization and extension
 
 #### Online Resources
@@ -1957,7 +1957,7 @@ A: Yes, the model supports multi-instance usage. See Example 4 in Section 12 for
 
 ### Feedback and Suggestions
 
-We value your feedback to improve the Whitney LPDDR5 SystemC Model:
+We value your feedback to improve the OpenDDR DDR SystemC Model:
 
 #### How to Provide Feedback
 
@@ -1969,21 +1969,21 @@ We value your feedback to improve the Whitney LPDDR5 SystemC Model:
 #### Feedback Channels
 
 - **Email**: feedback@company.com
-- **Online Survey**: https://survey.company.com/whitney-systemc
+- **Online Survey**: https://survey.company.com/OpenDDR-systemc
 - **User Forum**: https://forum.company.com/systemc-models
 - **Direct Contact**: Through your account manager or sales representative
 
 ### Version History and Updates
 
 #### Current Version: v1.0
-- Initial release of Whitney LPDDR5 SystemC Model
+- Initial release of OpenDDR DDR SystemC Model
 - Full AXI4, APB, and DFI interface support
 - Comprehensive testbench and examples
 - Complete documentation and user guide
 
 #### Planned Updates
 - **v1.1**: Enhanced performance monitoring and additional timing parameters
-- **v1.2**: Support for additional LPDDR5 features and configurations
+- **v1.2**: Support for additional DDR features and configurations
 - **v2.0**: Multi-channel support and advanced power modeling
 
 #### Update Notifications
@@ -2024,7 +2024,7 @@ This software may be subject to export control regulations. Please ensure compli
 #### DDR_CONFIG Register (0x008)
 | Bits | Field Name | Access | Description |
 |------|------------|--------|-------------|
-| [1:0] | DDR_TYPE | R/W | 00=LPDDR4X, 01=LPDDR5, 10=LPDDR5X |
+| [1:0] | DDR_TYPE | R/W | 00=LPDDR4X, 01=DDR, 10=DDRX |
 | [3:2] | DATA_WIDTH | R/W | 00=16-bit, 01=32-bit, 10=64-bit |
 | [7:4] | BURST_LENGTH | R/W | 0000=BL16, 0001=BL32 |
 | [11:8] | NUM_BANKS | R/W | Number of banks (0-15) |
@@ -2033,7 +2033,7 @@ This software may be subject to export control regulations. Please ensure compli
 
 ### Appendix B: Timing Parameter Definitions
 
-#### LPDDR5 Standard Timing Parameters
+#### DDR Standard Timing Parameters
 | Parameter | Description | Min (ns) | Typical (ns) | Max (ns) |
 |-----------|-------------|----------|--------------|----------|
 | tCL | CAS Latency | 14 | 18 | 24 |
@@ -2067,7 +2067,7 @@ This software may be subject to export control regulations. Please ensure compli
 ### Appendix D: Performance Benchmarks
 
 #### Reference Performance Data
-Based on typical LPDDR5-6400 configuration:
+Based on typical DDR-6400 configuration:
 
 | Metric | Value | Unit |
 |--------|-------|------|
@@ -2090,7 +2090,7 @@ Based on typical LPDDR5-6400 configuration:
 ---
 
 **Document Information:**
-- **Title**: Whitney LPDDR5 Memory Controller SystemC Model User Guide
+- **Title**: OpenDDR DDR Memory Controller SystemC Model User Guide
 - **Version**: 1.0
 - **Date**: January 2024
 - **Authors**: SystemC Modeling Team

@@ -1,4 +1,4 @@
-#include "whitney_systemc_model_enhanced.h"
+#include "openddr_systemc_model_enhanced.h"
 #include <systemc.h>
 #include <iostream>
 #include <iomanip>
@@ -6,8 +6,8 @@
 #include <random>
 #include <map>
 
-// LPDDR5-Specific Test Cases for Whitney SystemC Model
-SC_MODULE(WhitneyLPDDR5TestCases) {
+// DDR-Specific Test Cases for openddr SystemC Model
+SC_MODULE(openddrDDRTestCases) {
     // Clock and reset signals
     sc_clock mck;
     sc_signal<bool> mc_rst_b;
@@ -89,12 +89,12 @@ SC_MODULE(WhitneyLPDDR5TestCases) {
     sc_signal<sc_uint<7>> dfi_address_1_p3;
     sc_signal<bool> dfi_reset_n;
 
-    // DFI WCK Control Interface (LPDDR5-specific)
+    // DFI WCK Control Interface (DDR-specific)
     sc_signal<sc_uint<4>> dfi_wck_cs;
     sc_signal<sc_uint<4>> dfi_wck_en;
     sc_signal<sc_uint<2>> dfi_wck_toggle;
 
-    // DFI Write Data Interface (16 phases for LPDDR5)
+    // DFI Write Data Interface (16 phases for DDR)
     sc_signal<sc_uint<32>> dfi_wrdata_0;
     sc_signal<sc_uint<32>> dfi_wrdata_1;
     sc_signal<sc_uint<32>> dfi_wrdata_2;
@@ -171,7 +171,7 @@ SC_MODULE(WhitneyLPDDR5TestCases) {
     sc_signal<sc_uint<32>> dfi_rddata_15;
 
     // DUT instance
-    WhitneySystemCModelEnhanced* dut;
+    openddrSystemCModelEnhanced* dut;
 
     // Test control variables
     std::mt19937 random_gen;
@@ -181,7 +181,7 @@ SC_MODULE(WhitneyLPDDR5TestCases) {
     std::map<sc_uint<40>, sc_uint<64>> memory_model;  // Simple memory model for verification
 
     // Constructor
-    SC_CTOR(WhitneyLPDDR5TestCases) : 
+    SC_CTOR(openddrDDRTestCases) : 
         mck("mck", 5, SC_NS),           // 200MHz main clock
         slow_clk("slow_clk", 40, SC_NS), // 25MHz slow clock
         mc0_aclk("mc0_aclk", 5, SC_NS),  // 200MHz AXI clock
@@ -191,7 +191,7 @@ SC_MODULE(WhitneyLPDDR5TestCases) {
         current_test_id(0)
     {
         // Create DUT instance
-        dut = new WhitneySystemCModelEnhanced("dut");
+        dut = new openddrSystemCModelEnhanced("dut");
 
         // Connect all signals
         connect_signals();
@@ -201,27 +201,27 @@ SC_MODULE(WhitneyLPDDR5TestCases) {
 
         // Register test processes
         SC_THREAD(reset_sequence);
-        SC_THREAD(lpddr5_test_suite);
+        SC_THREAD(DDR_test_suite);
         SC_THREAD(dfi_read_data_driver);
         SC_THREAD(wck_monitor);
     }
 
-    ~WhitneyLPDDR5TestCases() {
+    ~openddrDDRTestCases() {
         delete dut;
     }
 
     void connect_signals();
     void initialize_signals();
     void reset_sequence();
-    void lpddr5_test_suite();
+    void DDR_test_suite();
     void dfi_read_data_driver();
     void wck_monitor();
 
-    // LPDDR5-Specific Test Cases
+    // DDR-Specific Test Cases
     void test_case_1_bl32_burst_operations();
     void test_case_2_wck_training_sequence();
     void test_case_3_bank_group_interleaving();
-    void test_case_4_refresh_management_lpddr5();
+    void test_case_4_refresh_management_DDR();
     void test_case_5_power_management_features();
 
     // Helper functions
@@ -229,14 +229,14 @@ SC_MODULE(WhitneyLPDDR5TestCases) {
     void axi_read_transaction(sc_uint<12> id, sc_uint<40> addr, sc_uint<8> len = 0);
     void apb_write(sc_uint<10> addr, sc_uint<32> data);
     sc_uint<32> apb_read(sc_uint<10> addr);
-    void configure_lpddr5_timing();
-    void configure_lpddr5_mode_registers();
+    void configure_DDR_timing();
+    void configure_DDR_mode_registers();
     void wait_for_wck_training();
     void verify_dfi_command_sequence(const std::string& expected_sequence);
     void print_test_results();
 };
 
-void WhitneyLPDDR5TestCases::connect_signals() {
+void openddrDDRTestCases::connect_signals() {
     // Connect clocks and resets
     dut->mck(mck);
     dut->mc_rst_b(mc_rst_b);
@@ -318,7 +318,7 @@ void WhitneyLPDDR5TestCases::connect_signals() {
     dut->dfi_address_1_p3(dfi_address_1_p3);
     dut->dfi_reset_n(dfi_reset_n);
 
-    // Connect DFI WCK Control (LPDDR5-specific)
+    // Connect DFI WCK Control (DDR-specific)
     dut->dfi_wck_cs(dfi_wck_cs);
     dut->dfi_wck_en(dfi_wck_en);
     dut->dfi_wck_toggle(dfi_wck_toggle);
@@ -400,7 +400,7 @@ void WhitneyLPDDR5TestCases::connect_signals() {
     dut->dfi_rddata_15(dfi_rddata_15);
 }
 
-void WhitneyLPDDR5TestCases::initialize_signals() {
+void openddrDDRTestCases::initialize_signals() {
     // Initialize AXI signals to safe values
     mc0_axi_awvalid.write(false);
     mc0_axi_wvalid.write(false);
@@ -444,13 +444,13 @@ void WhitneyLPDDR5TestCases::initialize_signals() {
     }
 }
 
-void WhitneyLPDDR5TestCases::reset_sequence() {
+void openddrDDRTestCases::reset_sequence() {
     // Initialize all control signals
     mc_rst_b.write(false);
     porst_b.write(false);
     mc0_aresetn.write(false);
     
-    std::cout << "Starting LPDDR5-Specific Test Cases for Whitney SystemC Model..." << std::endl;
+    std::cout << "Starting DDR-Specific Test Cases for openddr SystemC Model..." << std::endl;
     
     // Hold reset for several cycles
     wait(100, SC_NS);
@@ -465,21 +465,21 @@ void WhitneyLPDDR5TestCases::reset_sequence() {
     std::cout << "@" << sc_time_stamp() << " Reset sequence completed" << std::endl;
 }
 
-void WhitneyLPDDR5TestCases::lpddr5_test_suite() {
+void openddrDDRTestCases::DDR_test_suite() {
     // Wait for reset completion
     wait(200, SC_NS);
     
-    std::cout << "@" << sc_time_stamp() << " Starting LPDDR5-specific test suite..." << std::endl;
+    std::cout << "@" << sc_time_stamp() << " Starting DDR-specific test suite..." << std::endl;
     
-    // Configure LPDDR5 timing and mode registers
-    configure_lpddr5_timing();
-    configure_lpddr5_mode_registers();
+    // Configure DDR timing and mode registers
+    configure_DDR_timing();
+    configure_DDR_mode_registers();
     
-    // Run LPDDR5-specific test cases
+    // Run DDR-specific test cases
     test_case_1_bl32_burst_operations();
     test_case_2_wck_training_sequence();
     test_case_3_bank_group_interleaving();
-    test_case_4_refresh_management_lpddr5();
+    test_case_4_refresh_management_DDR();
     test_case_5_power_management_features();
     
     // Wait for all transactions to complete
@@ -488,16 +488,16 @@ void WhitneyLPDDR5TestCases::lpddr5_test_suite() {
     // Print final results
     print_test_results();
     
-    std::cout << "LPDDR5 test suite completed!" << std::endl;
+    std::cout << "DDR test suite completed!" << std::endl;
 }
 
-void WhitneyLPDDR5TestCases::dfi_read_data_driver() {
-    // Enhanced DFI read data driver for LPDDR5 with 16-phase data
+void openddrDDRTestCases::dfi_read_data_driver() {
+    // Enhanced DFI read data driver for DDR with 16-phase data
     while (true) {
         wait(mck.posedge_event());
         
         if (dfi_rddata_en.read()) {
-            // Simulate LPDDR5 read data return with proper timing
+            // Simulate DDR read data return with proper timing
             wait(25, SC_NS);  // tDQSCK + tRPRE timing
             dfi_rddata_valid.write(true);
             

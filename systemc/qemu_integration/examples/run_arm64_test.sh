@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# ARM64 System Test with Whitney LPDDR5 SystemC Model
+# ARM64 System Test with OpenDDR DDR SystemC Model
 # This script demonstrates how to run QEMU with the SystemC memory backend
 
 set -e
@@ -18,11 +18,11 @@ GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
-echo -e "${GREEN}Whitney LPDDR5 SystemC + QEMU ARM64 Test${NC}"
+echo -e "${GREEN}OpenDDR DDR SystemC + QEMU ARM64 Test${NC}"
 echo "=========================================="
 
 # Check if SystemC server is available
-if ! command -v ../systemc_bridge/whitney_systemc_server &> /dev/null; then
+if ! command -v ../systemc_bridge/OpenDDR_systemc_server &> /dev/null; then
     echo -e "${RED}Error: SystemC server not found. Please build it first:${NC}"
     echo "  cd ../systemc_bridge && make"
     exit 1
@@ -35,12 +35,12 @@ if ! command -v qemu-system-aarch64 &> /dev/null; then
 fi
 
 # Start SystemC server in background
-echo -e "${YELLOW}Starting Whitney SystemC server...${NC}"
-../systemc_bridge/whitney_systemc_server \
+echo -e "${YELLOW}Starting OpenDDR SystemC server...${NC}"
+../systemc_bridge/OpenDDR_systemc_server \
     --port $SYSTEMC_PORT \
     --memory-size $MEMORY_SIZE \
     --arch arm64 \
-    --trace-file whitney_arm64_trace.vcd &
+    --trace-file OpenDDR_arm64_trace.vcd &
 
 SYSTEMC_PID=$!
 echo "SystemC server started with PID: $SYSTEMC_PID"
@@ -151,7 +151,7 @@ sleep 2
 
 echo ""
 echo -e "${GREEN}ARM64 test completed!${NC}"
-echo "SystemC trace saved to: whitney_arm64_trace.vcd"
+echo "SystemC trace saved to: OpenDDR_arm64_trace.vcd"
 echo ""
 echo "To view the trace:"
-echo "  gtkwave whitney_arm64_trace.vcd"
+echo "  gtkwave OpenDDR_arm64_trace.vcd"

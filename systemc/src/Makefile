@@ -1,4 +1,4 @@
-# Makefile for Whitney LPDDR5 SystemC Model
+# Makefile for openddr DDR SystemC Model
 # Requires SystemC installation
 
 # SystemC installation path - modify as needed
@@ -13,9 +13,9 @@ LDFLAGS = -L$(SYSTEMC_HOME)/lib-$(SYSTEMC_ARCH)
 LIBS = -lsystemc -lm
 
 # Source files
-SRCS = whitney_systemc_model.cpp whitney_testbench.cpp
+SRCS = openddr_systemc_model.cpp openddr_testbench.cpp
 OBJS = $(SRCS:.cpp=.o)
-TARGET = whitney_simulation
+TARGET = openddr_simulation
 
 # Default target
 all: $(TARGET)
@@ -37,8 +37,8 @@ run: $(TARGET)
 	./$(TARGET)
 
 # View waveforms (requires GTKWave)
-wave: whitney_trace.vcd
-	gtkwave whitney_trace.vcd &
+wave: openddr_trace.vcd
+	gtkwave openddr_trace.vcd &
 
 # Install dependencies (Ubuntu/Debian)
 install-deps:

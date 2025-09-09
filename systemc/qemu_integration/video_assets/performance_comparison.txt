@@ -33,7 +33,7 @@ Typical overhead: 10-50% performance reduction
 | Memory Bandwidth | ~10 GB/s | ~100-500 MB/s | 20-100x |
 | CPU Performance | Baseline | 10-50% slower | Variable |
 | Accuracy | Functional | Cycle-accurate | N/A |
-| Real-world modeling | Limited | Full LPDDR5 | Complete |
+| Real-world modeling | Limited | Full DDR | Complete |
 
 ## Optimization Impact
 ```

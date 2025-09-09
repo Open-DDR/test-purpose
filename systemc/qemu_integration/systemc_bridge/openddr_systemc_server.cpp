@@ -7,7 +7,7 @@
 #include <chrono>
 
 // Global server instance for signal handling
-WhitneySystemCServer* g_server = nullptr;
+openddrSystemCServer* g_server = nullptr;
 
 // Signal handler for graceful shutdown
 void signal_handler(int signal) {
@@ -23,7 +23,7 @@ void signal_handler(int signal) {
 void print_usage(const char* program_name) {
     std::cout << "Usage: " << program_name << " [OPTIONS]" << std::endl;
     std::cout << std::endl;
-    std::cout << "Whitney LPDDR5 SystemC Server for QEMU Integration" << std::endl;
+    std::cout << "openddr DDR SystemC Server for QEMU Integration" << std::endl;
     std::cout << std::endl;
     std::cout << "Options:" << std::endl;
     std::cout << "  -p, --port PORT          Server port (default: 8888)" << std::endl;
@@ -128,7 +128,7 @@ int sc_main(int argc, char* argv[]) {
     uint64_t memory_size = memory_size_mb * 1024 * 1024;
     
     // Print configuration
-    std::cout << "Whitney LPDDR5 SystemC Server Configuration:" << std::endl;
+    std::cout << "openddr DDR SystemC Server Configuration:" << std::endl;
     std::cout << "  Port:         " << port << std::endl;
     std::cout << "  Memory Size:  " << memory_size_mb << " MB" << std::endl;
     std::cout << "  Architecture: " << architecture << std::endl;
@@ -148,7 +148,7 @@ int sc_main(int argc, char* argv[]) {
     
     try {
         // Create and start server
-        WhitneySystemCServer server(port, memory_size, architecture);
+        openddrSystemCServer server(port, memory_size, architecture);
         g_server = &server;
         
         // Setup tracing if trace file is specified
@@ -156,7 +156,7 @@ int sc_main(int argc, char* argv[]) {
             server.setup_tracing(trace_file);
         }
         
-        std::cout << "Starting Whitney LPDDR5 SystemC Server..." << std::endl;
+        std::cout << "Starting openddr DDR SystemC Server..." << std::endl;
         std::cout << "Listening on port " << port << std::endl;
         std::cout << "Press Ctrl+C to stop" << std::endl;
         std::cout << std::endl;

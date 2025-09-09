@@ -1,5 +1,5 @@
 # QEMU Integration Video Guide Script
-## Whitney LPDDR5 SystemC Model Integration
+## OpenDDR DDR SystemC Model Integration
 
 ### Video Structure Overview
 **Total Duration: 15-20 minutes**
@@ -11,12 +11,12 @@
 **Visual: Title slide with project logo**
 
 ### Script:
-"Welcome to the Whitney LPDDR5 SystemC Model QEMU Integration Guide. I'm going to show you how to integrate our advanced LPDDR5 memory model with QEMU for comprehensive system-level testing.
+"Welcome to the OpenDDR DDR SystemC Model QEMU Integration Guide. I'm going to show you how to integrate our advanced DDR memory model with QEMU for comprehensive system-level testing.
 
 In this video, you'll learn:
 - The architecture of our QEMU-SystemC integration
 - How to build and test the bridge
-- Running real ARM64, RISC-V, and x86 systems with accurate LPDDR5 modeling
+- Running real ARM64, RISC-V, and x86 systems with accurate DDR modeling
 - Performance considerations and optimization strategies"
 
 **Visual: Bullet points appearing on screen**
@@ -33,9 +33,9 @@ First, we have QEMU - the system emulator that runs your CPU and devices.
 
 Second, we have our Socket Bridge - this is the key innovation that allows QEMU to communicate with SystemC models over a network socket.
 
-Third, we have our Whitney LPDDR5 SystemC Model - providing cycle-accurate LPDDR5 behavior.
+Third, we have our OpenDDR DDR SystemC Model - providing cycle-accurate DDR behavior.
 
-The flow works like this: QEMU sends memory requests through the Socket Bridge, which translates them into AXI transactions for our SystemC model. The model processes the requests with full LPDDR5 timing and sends responses back through the bridge."
+The flow works like this: QEMU sends memory requests through the Socket Bridge, which translates them into AXI transactions for our SystemC model. The model processes the requests with full DDR timing and sends responses back through the bridge."
 
 **Visual: Animation showing data flow between components**
 
@@ -56,7 +56,7 @@ make all
 "Now let's test our bridge. We'll start the SystemC server:"
 
 ```bash
-./whitney_systemc_server --port 8888 --memory-size 1024 --arch arm64 &
+./OpenDDR_systemc_server --port 8888 --memory-size 1024 --arch arm64 &
 ```
 
 "And test the connectivity:"
@@ -84,7 +84,7 @@ cd ../examples
 
 The QemuSystemCBridge class is our main interface. It handles network communication with QEMU, processes memory requests, and translates them to SystemC AXI transactions.
 
-The WhitneySystemCServer provides a standalone server application with a flexible command-line interface. You can configure port, memory size, target architecture, and enable tracing.
+The OpenDDRSystemCServer provides a standalone server application with a flexible command-line interface. You can configure port, memory size, target architecture, and enable tracing.
 
 Our communication protocol uses custom message types for initialization, read/write operations, status queries, and shutdown. Each message includes a header with type, length, transaction ID, and timestamp."
 
@@ -96,12 +96,12 @@ Our communication protocol uses custom message types for initialization, read/wr
 **Visual: Split screen showing terminal and system monitoring**
 
 ### Script:
-"Now let's explore advanced usage scenarios. Here's how you'd run an ARM64 Linux system with our LPDDR5 model:
+"Now let's explore advanced usage scenarios. Here's how you'd run an ARM64 Linux system with our DDR model:
 
 First, start the SystemC server with larger memory:"
 
 ```bash
-./whitney_systemc_server --port 8888 --memory-size 2048 --arch arm64 &
+./OpenDDR_systemc_server --port 8888 --memory-size 2048 --arch arm64 &
 ```
 
 "Then launch QEMU with our memory backend - note this is conceptual as the QEMU plugin is still in development:"
@@ -132,7 +132,7 @@ qemu-system-aarch64 \
 ### Script:
 "Let's talk about performance. There is an overhead when using SystemC models - memory latency increases from about 100 nanoseconds to 10-50 microseconds, and bandwidth drops from 10 GB/s to 100-500 MB/s.
 
-However, this trade-off gives you cycle-accurate LPDDR5 behavior, which is invaluable for:
+However, this trade-off gives you cycle-accurate DDR behavior, which is invaluable for:
 - Complete system verification
 - Real workload analysis  
 - Driver validation
@@ -162,7 +162,7 @@ make mem-test
 "Debug features include verbose logging, transaction tracing, and real-time performance monitoring:"
 
 ```bash
-./whitney_systemc_server --port 8888 --trace-file memory.vcd --verbose
+./OpenDDR_systemc_server --port 8888 --trace-file memory.vcd --verbose
 ```
 
 "The test client can generate detailed status reports and performance analysis."
@@ -190,7 +190,7 @@ This integration already provides a powerful verification platform, and these im
 **Visual: Summary slides**
 
 ### Script:
-"The QEMU-SystemC integration provides unprecedented system-level verification capabilities. You can now run complete operating systems and real applications with accurate LPDDR5 memory modeling.
+"The QEMU-SystemC integration provides unprecedented system-level verification capabilities. You can now run complete operating systems and real applications with accurate DDR memory modeling.
 
 Key takeaways:
 - Build with 'make all' in the systemc_bridge directory
@@ -198,7 +198,7 @@ Key takeaways:
 - Use performance monitoring to optimize your tests
 - Leverage the debugging features for analysis
 
-The combination of QEMU's system emulation with our Whitney LPDDR5 model creates a verification environment suitable for both functional testing and performance analysis.
+The combination of QEMU's system emulation with our OpenDDR DDR model creates a verification environment suitable for both functional testing and performance analysis.
 
 Thank you for watching, and happy testing!"
 

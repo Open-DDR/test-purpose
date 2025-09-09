@@ -1,7 +1,7 @@
 # Presentation Slides for QEMU Integration Video Guide
 
 ## Slide 1: Title Slide
-**Title:** Whitney LPDDR5 SystemC Model - QEMU Integration Guide
+**Title:** OpenDDR DDR SystemC Model - QEMU Integration Guide
 **Subtitle:** System-Level Verification with Cycle-Accurate Memory Modeling
 **Duration:** 15-20 minutes
 **Target Audience:** Hardware Engineers, SystemC Developers, Verification Engineers
@@ -18,7 +18,7 @@
 **Three-Component Integration:**
 1. **QEMU** - System emulator (CPU, devices, OS)
 2. **Socket Bridge** - Network communication layer
-3. **SystemC Model** - Cycle-accurate LPDDR5 modeling
+3. **SystemC Model** - Cycle-accurate DDR modeling
 
 **Key Innovation:** Network-based bridge enabling real-time communication
 
@@ -28,7 +28,7 @@
 2. QEMU memory subsystem receives request
 3. Request sent via TCP socket to Bridge
 4. Bridge converts to AXI transaction format
-5. SystemC model processes with LPDDR5 timing
+5. SystemC model processes with DDR timing
 6. Response travels back through Bridge
 7. QEMU receives response and continues execution
 
@@ -38,7 +38,7 @@ qemu_integration/
 ├── README_QEMU_Integration.md
 ├── systemc_bridge/
 │   ├── qemu_systemc_bridge.h/cpp
-│   ├── whitney_systemc_server.cpp
+│   ├── OpenDDR_systemc_server.cpp
 │   ├── test_client.cpp
 │   └── Makefile
 └── examples/
@@ -54,7 +54,7 @@ cd systemc/qemu_integration/systemc_bridge
 make all
 
 # 2. Start server
-./whitney_systemc_server --port 8888 --memory-size 1024 --arch arm64 &
+./OpenDDR_systemc_server --port 8888 --memory-size 1024 --arch arm64 &
 
 # 3. Test connectivity
 ./test_client --server localhost:8888 --test basic
@@ -70,7 +70,7 @@ cd ../examples && ./run_arm64_test.sh
 - SystemC Interface (AXI translation)
 - Statistics Tracking (performance metrics)
 
-**WhitneySystemCServer Application:**
+**OpenDDRSystemCServer Application:**
 - Command-line interface
 - Flexible configuration
 - Multiple architecture support
@@ -88,7 +88,7 @@ cd ../examples && ./run_arm64_test.sh
 ## Slide 9: Advanced Usage - ARM64
 ```bash
 # Large memory system
-./whitney_systemc_server --port 8888 --memory-size 2048 --arch arm64 &
+./OpenDDR_systemc_server --port 8888 --memory-size 2048 --arch arm64 &
 
 # QEMU launch (conceptual)
 qemu-system-aarch64 -M virt -cpu cortex-a57 -m 2G \
@@ -105,7 +105,7 @@ qemu-system-aarch64 -M virt -cpu cortex-a57 -m 2G \
 - **CPU Performance:** 10-50% slower
 
 **Benefits:**
-- Cycle-accurate LPDDR5 behavior
+- Cycle-accurate DDR behavior
 - Complete system verification
 - Real workload analysis
 
@@ -140,7 +140,7 @@ make lint      # Static analysis
 - 📈 Statistics collection
 
 ```bash
-./whitney_systemc_server --port 8888 --trace-file memory.vcd --verbose
+./OpenDDR_systemc_server --port 8888 --trace-file memory.vcd --verbose
 ```
 
 ## Slide 14: Future Roadmap

@@ -1,6 +1,6 @@
 # Video Creation Assets for QEMU Integration Guide
 
-This directory contains all the materials needed to create a professional video guide for the Whitney LPDDR5 SystemC Model QEMU Integration.
+This directory contains all the materials needed to create a professional video guide for the OpenDDR DDR SystemC Model QEMU Integration.
 
 ## 📁 File Contents
 
@@ -15,7 +15,7 @@ This directory contains all the materials needed to create a professional video 
 
 ## 🎬 Video Overview
 
-**Title:** Whitney LPDDR5 SystemC Model - QEMU Integration Guide  
+**Title:** OpenDDR DDR SystemC Model - QEMU Integration Guide  
 **Duration:** 15-20 minutes  
 **Target Audience:** Hardware engineers, SystemC developers, verification engineers
 
@@ -100,7 +100,7 @@ cd systemc/qemu_integration/systemc_bridge
 make all
 
 # Start SystemC server
-./whitney_systemc_server --port 8888 --memory-size 1024 --arch arm64 &
+./OpenDDR_systemc_server --port 8888 --memory-size 1024 --arch arm64 &
 
 # Test connectivity
 ./test_client --server localhost:8888 --test basic
@@ -112,7 +112,7 @@ cd ../examples && ./run_arm64_test.sh
 ./test_client --server localhost:8888 --test performance
 
 # Debug mode
-./whitney_systemc_server --port 8888 --trace-file memory.vcd --verbose
+./OpenDDR_systemc_server --port 8888 --trace-file memory.vcd --verbose
 ```
 
 ## 📊 Key Performance Messages
@@ -120,7 +120,7 @@ cd ../examples && ./run_arm64_test.sh
 - **Trade-off:** Performance overhead vs. accuracy
 - **Latency:** 100ns → 10-50μs (100-500x increase)
 - **Bandwidth:** 10 GB/s → 100-500 MB/s (20-100x reduction)  
-- **Benefit:** Cycle-accurate LPDDR5 modeling
+- **Benefit:** Cycle-accurate DDR modeling
 - **Optimization:** Up to 5x improvement with techniques
 
 ## 🎨 Visual Style Guidelines
@@ -152,10 +152,10 @@ cd ../examples && ./run_arm64_test.sh
 
 ### Metadata Template
 ```
-Title: Whitney LPDDR5 SystemC - QEMU Integration Guide
-Description: Learn how to integrate the Whitney LPDDR5 SystemC model with QEMU for comprehensive system-level verification. Includes architecture overview, hands-on demos, and performance analysis.
+Title: OpenDDR DDR SystemC - QEMU Integration Guide
+Description: Learn how to integrate the OpenDDR DDR SystemC model with QEMU for comprehensive system-level verification. Includes architecture overview, hands-on demos, and performance analysis.
 
-Tags: systemc, qemu, lpddr5, verification, hardware, simulation, memory-controller, system-level-testing
+Tags: systemc, qemu, DDR, verification, hardware, simulation, memory-controller, system-level-testing
 ```
 
 ## 🆘 Support & Resources
@@ -184,6 +184,6 @@ Tags: systemc, qemu, lpddr5, verification, hardware, simulation, memory-controll
 
 This comprehensive package provides everything needed to create a professional video guide. The materials are designed to be flexible - you can use them as-is or adapt them to your specific needs and style.
 
-The integration described in the video represents cutting-edge verification technology, combining QEMU's system emulation capabilities with cycle-accurate LPDDR5 modeling. This creates unprecedented opportunities for system-level verification and performance analysis.
+The integration described in the video represents cutting-edge verification technology, combining QEMU's system emulation capabilities with cycle-accurate DDR modeling. This creates unprecedented opportunities for system-level verification and performance analysis.
 
 Good luck with your video creation, and thank you for sharing this valuable technology with the community!

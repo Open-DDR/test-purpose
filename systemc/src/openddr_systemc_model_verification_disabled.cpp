@@ -1,10 +1,10 @@
-#include "whitney_systemc_model_enhanced.h"
+#include "openddr_systemc_model_enhanced.h"
 #include <iostream>
 #include <iomanip>
 #include <sstream>
 
 // AXI Write Address Channel Process
-void WhitneySystemCModelEnhanced::axi_write_addr_process() {
+void openddrSystemCModelEnhanced::axi_write_addr_process() {
     if (!mc_rst_b.read()) {
         axi_aw_ready_reg = false;
         mc0_axi_awready.write(false);
@@ -48,7 +48,7 @@ void WhitneySystemCModelEnhanced::axi_write_addr_process() {
 }
 
 // AXI Write Data Channel Process
-void WhitneySystemCModelEnhanced::axi_write_data_process() {
+void openddrSystemCModelEnhanced::axi_write_data_process() {
     if (!mc_rst_b.read()) {
         axi_w_ready_reg = false;
         mc0_axi_wready.write(false);
@@ -83,7 +83,7 @@ void WhitneySystemCModelEnhanced::axi_write_data_process() {
 }
 
 // AXI Write Response Channel Process
-void WhitneySystemCModelEnhanced::axi_write_resp_process() {
+void openddrSystemCModelEnhanced::axi_write_resp_process() {
     if (!mc_rst_b.read()) {
         axi_b_valid_reg = false;
         mc0_axi_bvalid.write(false);
@@ -114,7 +114,7 @@ void WhitneySystemCModelEnhanced::axi_write_resp_process() {
 }
 
 // AXI Read Address Channel Process
-void WhitneySystemCModelEnhanced::axi_read_addr_process() {
+void openddrSystemCModelEnhanced::axi_read_addr_process() {
     if (!mc_rst_b.read()) {
         axi_ar_ready_reg = false;
         mc0_axi_arready.write(false);
@@ -156,7 +156,7 @@ void WhitneySystemCModelEnhanced::axi_read_addr_process() {
 }
 
 // AXI Read Data Channel Process
-void WhitneySystemCModelEnhanced::axi_read_data_process() {
+void openddrSystemCModelEnhanced::axi_read_data_process() {
     if (!mc_rst_b.read()) {
         axi_r_valid_reg = false;
         mc0_axi_rvalid.write(false);
@@ -192,7 +192,7 @@ void WhitneySystemCModelEnhanced::axi_read_data_process() {
 }
 
 // Enhanced APB Register Interface Process
-void WhitneySystemCModelEnhanced::apb_process() {
+void openddrSystemCModelEnhanced::apb_process() {
     if (!mc_rst_b.read()) {
         mc_prdata.write(0);
         mc_pready.write(false);
@@ -243,7 +243,7 @@ void WhitneySystemCModelEnhanced::apb_process() {
 }
 
 // Enhanced Scheduler Process - COMPLETELY REMOVES ALL VERIFICATION
-void WhitneySystemCModelEnhanced::scheduler_process() {
+void openddrSystemCModelEnhanced::scheduler_process() {
     if (!mc_rst_b.read()) {
         bufacc_cycle_en = false;
         bufacc_cycle_mode_wr = false;
@@ -383,7 +383,7 @@ void WhitneySystemCModelEnhanced::scheduler_process() {
 }
 
 // Enhanced Sequencer Process
-void WhitneySystemCModelEnhanced::sequencer_process() {
+void openddrSystemCModelEnhanced::sequencer_process() {
     if (!mc_rst_b.read()) {
         seq_state = SEQ_IDLE;
         total_ddr_commands = 0;
@@ -488,7 +488,7 @@ void WhitneySystemCModelEnhanced::sequencer_process() {
 }
 
 // Enhanced DFI Command Process
-void WhitneySystemCModelEnhanced::dfi_command_process() {
+void openddrSystemCModelEnhanced::dfi_command_process() {
     if (!mc_rst_b.read()) {
         dfi_cs_0_p0.write(0);
         dfi_cs_0_p1.write(0);
@@ -520,7 +520,7 @@ void WhitneySystemCModelEnhanced::dfi_command_process() {
         dfi_cs_0_p0.write(1); // Chip select active
         dfi_address_0_p0.write(0x55); // Example command encoding
         
-        // WCK control for LPDDR5
+        // WCK control for DDR
         dfi_wck_cs.write(1);
         dfi_wck_en.write(1);
         dfi_wck_toggle.write(1);
@@ -541,7 +541,7 @@ void WhitneySystemCModelEnhanced::dfi_command_process() {
 }
 
 // Enhanced DFI Write Data Process
-void WhitneySystemCModelEnhanced::dfi_write_data_process() {
+void openddrSystemCModelEnhanced::dfi_write_data_process() {
     if (!mc_rst_b.read()) {
         // Reset all write data outputs
         dfi_wrdata_0.write(0);
@@ -576,7 +576,7 @@ void WhitneySystemCModelEnhanced::dfi_write_data_process() {
         return;
     }
 
-    // Enhanced write data handling for LPDDR5
+    // Enhanced write data handling for DDR
     if (seq_state == SEQ_W_WR && bufacc_cycle_mode_wr) {
         // Generate write data patterns across multiple phases
         dfi_wrdata_0.write(0x12345678);
@@ -609,7 +609,7 @@ void WhitneySystemCModelEnhanced::dfi_write_data_process() {
 }
 
 // Enhanced DFI Read Data Process
-void WhitneySystemCModelEnhanced::dfi_read_data_process() {
+void openddrSystemCModelEnhanced::dfi_read_data_process() {
     if (!mc_rst_b.read()) {
         mc_rdrst_b.write(false);
         mc_rcv_en.write(false);
@@ -630,14 +630,14 @@ void WhitneySystemCModelEnhanced::dfi_read_data_process() {
 }
 
 // Enhanced Refresh Timer Process
-void WhitneySystemCModelEnhanced::refresh_timer_process() {
+void openddrSystemCModelEnhanced::refresh_timer_process() {
     if (!porst_b.read()) {
         refresh_counter = 0;
         refresh_pending_counter = 0;
         return;
     }
 
-    // Enhanced refresh timer with realistic LPDDR5 timing
+    // Enhanced refresh timer with realistic DDR timing
     refresh_counter++;
     if (refresh_counter >= 1950) { // 7.8us at 250MHz clock
         refresh_counter = 0;
@@ -662,7 +662,7 @@ void WhitneySystemCModelEnhanced::refresh_timer_process() {
 }
 
 // COMPLETELY DISABLED Verification Process - NO VERIFICATION AT ALL
-void WhitneySystemCModelEnhanced::verification_process() {
+void openddrSystemCModelEnhanced::verification_process() {
     if (!mc_rst_b.read()) {
         queue_overflow_active = false;
         return;
@@ -709,7 +709,7 @@ void WhitneySystemCModelEnhanced::verification_process() {
 
 // Helper Functions Implementation
 
-void WhitneySystemCModelEnhanced::reset_model() {
+void openddrSystemCModelEnhanced::reset_model() {
     seq_state = SEQ_IDLE;
     apb_state = APB_IDLE;
     ddr_init_done = false;
@@ -744,7 +744,7 @@ void WhitneySystemCModelEnhanced::reset_model() {
     timing_violations = 0;
 }
 
-void WhitneySystemCModelEnhanced::update_page_table(int bank, sc_uint<ROW_WIDTH> row, bool open) {
+void openddrSystemCModelEnhanced::update_page_table(int bank, sc_uint<ROW_WIDTH> row, bool open) {
     if (bank < PAGE_TABLE_DEPTH) {
         page_table_vld_memory[bank] = open;
         if (open) {
@@ -753,18 +753,18 @@ void WhitneySystemCModelEnhanced::update_page_table(int bank, sc_uint<ROW_WIDTH>
     }
 }
 
-bool WhitneySystemCModelEnhanced::check_page_hit(int bank, sc_uint<ROW_WIDTH> row) {
+bool openddrSystemCModelEnhanced::check_page_hit(int bank, sc_uint<ROW_WIDTH> row) {
     if (bank < PAGE_TABLE_DEPTH && page_table_vld_memory[bank]) {
         return (page_table_row_memory[bank] == row);
     }
     return false;
 }
 
-void WhitneySystemCModelEnhanced::schedule_ddr_command(const DDRCommand& cmd) {
+void openddrSystemCModelEnhanced::schedule_ddr_command(const DDRCommand& cmd) {
     ddr_cmd_queue.push(cmd);
 }
 
-void WhitneySystemCModelEnhanced::execute_ddr_command(const DDRCommand& cmd) {
+void openddrSystemCModelEnhanced::execute_ddr_command(const DDRCommand& cmd) {
     std::cout << "@" << sc_time_stamp() << " DDR Command: ";
     switch (cmd.cmd_type) {
         case DDRCommand::CMD_ACT:
@@ -789,7 +789,7 @@ void WhitneySystemCModelEnhanced::execute_ddr_command(const DDRCommand& cmd) {
     std::cout << std::endl;
 }
 
-sc_uint<32> WhitneySystemCModelEnhanced::read_register(sc_uint<10> addr) {
+sc_uint<32> openddrSystemCModelEnhanced::read_register(sc_uint<10> addr) {
     switch (addr.to_uint()) {
         case 0x000: return seq_control_reg;
         case 0x004: return buf_config_reg;
@@ -823,7 +823,7 @@ sc_uint<32> WhitneySystemCModelEnhanced::read_register(sc_uint<10> addr) {
     }
 }
 
-void WhitneySystemCModelEnhanced::write_register(sc_uint<10> addr, sc_uint<32> data) {
+void openddrSystemCModelEnhanced::write_register(sc_uint<10> addr, sc_uint<32> data) {
     switch (addr.to_uint()) {
         case 0x000: seq_control_reg = data; break;
         case 0x004: buf_config_reg = data; break;
@@ -849,9 +849,9 @@ void WhitneySystemCModelEnhanced::write_register(sc_uint<10> addr, sc_uint<32> d
     }
 }
 
-void WhitneySystemCModelEnhanced::decode_address(sc_uint<40> addr, int& rank, int& bank, 
+void openddrSystemCModelEnhanced::decode_address(sc_uint<40> addr, int& rank, int& bank, 
                                                sc_uint<ROW_WIDTH>& row, sc_uint<COL_WIDTH>& col) {
-    // Enhanced address decoding for LPDDR5
+    // Enhanced address decoding for DDR
     // This is a simplified mapping - real implementation would be configurable
     rank = (addr >> 30) & 0x1;  // 1 bit for rank
     bank = (addr >> 6) & 0xF;   // 4 bits for bank (16 banks)
@@ -859,8 +859,8 @@ void WhitneySystemCModelEnhanced::decode_address(sc_uint<40> addr, int& rank, in
     col = (addr >> 3) & 0x3FF;   // 10 bits for column
 }
 
-void WhitneySystemCModelEnhanced::print_statistics() {
-    std::cout << "\n=== Enhanced Whitney SystemC Model Statistics ===" << std::endl;
+void openddrSystemCModelEnhanced::print_statistics() {
+    std::cout << "\n=== Enhanced openddr SystemC Model Statistics ===" << std::endl;
     std::cout << "Total Write Transactions: " << std::setfill('0') << std::setw(9) 
               << total_write_transactions << std::endl;
     std::cout << "Total Read Transactions:  " << std::setfill('0') << std::setw(9) 
@@ -887,7 +887,7 @@ void WhitneySystemCModelEnhanced::print_statistics() {
 }
 
 // Enhanced verification functions - ALL DISABLED
-sc_uint<64> WhitneySystemCModelEnhanced::generate_data_pattern(sc_uint<40> addr, DataPattern pattern) {
+sc_uint<64> openddrSystemCModelEnhanced::generate_data_pattern(sc_uint<40> addr, DataPattern pattern) {
     sc_uint<64> data = 0;
     
     switch (pattern) {
@@ -922,7 +922,7 @@ sc_uint<64> WhitneySystemCModelEnhanced::generate_data_pattern(sc_uint<40> addr,
     return data;
 }
 
-bool WhitneySystemCModelEnhanced::verify_data_pattern(sc_uint<40> addr, sc_uint<64> data, DataPattern pattern) {
+bool openddrSystemCModelEnhanced::verify_data_pattern(sc_uint<40> addr, sc_uint<64> data, DataPattern pattern) {
     // ALWAYS RETURN TRUE - NO VERIFICATION
     (void)addr; // Suppress unused parameter warnings
     (void)data;
@@ -930,7 +930,7 @@ bool WhitneySystemCModelEnhanced::verify_data_pattern(sc_uint<40> addr, sc_uint<
     return true;
 }
 
-void WhitneySystemCModelEnhanced::write_memory_block(sc_uint<40> addr, sc_uint<64> data, sc_uint<8> strb) {
+void openddrSystemCModelEnhanced::write_memory_block(sc_uint<40> addr, sc_uint<64> data, sc_uint<8> strb) {
     uint64_t block_addr = addr.to_uint64() & ~(BLOCK_SIZE - 1);
     uint32_t offset = addr.to_uint64() & (BLOCK_SIZE - 1);
     
@@ -970,7 +970,7 @@ void WhitneySystemCModelEnhanced::write_memory_block(sc_uint<40> addr, sc_uint<6
               << " Block=0x" << block_addr << " Offset=" << std::dec << offset << std::endl;
 }
 
-sc_uint<64> WhitneySystemCModelEnhanced::read_memory_block(sc_uint<40> addr) {
+sc_uint<64> openddrSystemCModelEnhanced::read_memory_block(sc_uint<40> addr) {
     uint64_t block_addr = addr.to_uint64() & ~(BLOCK_SIZE - 1);
     uint32_t offset = addr.to_uint64() & (BLOCK_SIZE - 1);
     
@@ -1003,13 +1003,13 @@ sc_uint<64> WhitneySystemCModelEnhanced::read_memory_block(sc_uint<40> addr) {
     return data;
 }
 
-bool WhitneySystemCModelEnhanced::check_timing_constraints(const DDRCommand& cmd) {
+bool openddrSystemCModelEnhanced::check_timing_constraints(const DDRCommand& cmd) {
     // ALWAYS RETURN TRUE - NO TIMING CHECKS
     (void)cmd; // Suppress unused parameter warning
     return true;
 }
 
-void WhitneySystemCModelEnhanced::update_bank_timing(int bank, const DDRCommand& cmd) {
+void openddrSystemCModelEnhanced::update_bank_timing(int bank, const DDRCommand& cmd) {
     sc_time current_time = sc_time_stamp();
     
     switch (cmd.cmd_type) {
@@ -1025,7 +1025,7 @@ void WhitneySystemCModelEnhanced::update_bank_timing(int bank, const DDRCommand&
     }
 }
 
-void WhitneySystemCModelEnhanced::log_verification_error(const std::string& error_type, 
+void openddrSystemCModelEnhanced::log_verification_error(const std::string& error_type, 
                                                        sc_uint<40> addr, const std::string& details) {
     // DISABLED - NO ERROR LOGGING
     (void)error_type; // Suppress unused parameter warnings
@@ -1035,26 +1035,26 @@ void WhitneySystemCModelEnhanced::log_verification_error(const std::string& erro
 }
 
 // Test pattern generators (simplified implementations) - ALL DISABLED
-void WhitneySystemCModelEnhanced::run_address_test() {
+void openddrSystemCModelEnhanced::run_address_test() {
     std::cout << "Address test disabled - no verification" << std::endl;
 }
 
-void WhitneySystemCModelEnhanced::run_data_pattern_test() {
+void openddrSystemCModelEnhanced::run_data_pattern_test() {
     std::cout << "Data pattern test disabled - no verification" << std::endl;
 }
 
-void WhitneySystemCModelEnhanced::run_burst_test() {
+void openddrSystemCModelEnhanced::run_burst_test() {
     std::cout << "Burst test disabled - no verification" << std::endl;
 }
 
-void WhitneySystemCModelEnhanced::run_bank_interleaving_test() {
+void openddrSystemCModelEnhanced::run_bank_interleaving_test() {
     std::cout << "Bank interleaving test disabled - no verification" << std::endl;
 }
 
-void WhitneySystemCModelEnhanced::run_refresh_test() {
+void openddrSystemCModelEnhanced::run_refresh_test() {
     std::cout << "Refresh test disabled - no verification" << std::endl;
 }
 
-void WhitneySystemCModelEnhanced::run_timing_test() {
+void openddrSystemCModelEnhanced::run_timing_test() {
     std::cout << "Timing test disabled - no verification" << std::endl;
 }

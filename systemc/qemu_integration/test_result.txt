@@ -1,28 +1,28 @@
-jayb@ubuntu22:~/proj/lpddr5/systemc/qemu_integration/examples$ ./run_arm64_test.sh 
-Whitney LPDDR5 SystemC + QEMU ARM64 Test
+jayb@ubuntu22:~/proj/DDR/systemc/qemu_integration/examples$ ./run_arm64_test.sh 
+OpenDDR DDR SystemC + QEMU ARM64 Test
 ==========================================
-Starting Whitney SystemC server...
+Starting OpenDDR SystemC server...
 SystemC server started with PID: 143216
 
         SystemC 2.3.3-Accellera --- Jun  6 2025 01:06:41
         Copyright (c) 1996-2018 by all Contributors,
         ALL RIGHTS RESERVED
-Whitney LPDDR5 SystemC Server Configuration:
+OpenDDR DDR SystemC Server Configuration:
   Port:         8888
   Memory Size:  1024 MB
   Architecture: arm64
-  Trace File:   whitney_arm64_trace.vcd
+  Trace File:   OpenDDR_arm64_trace.vcd
   Verbose:      No
   Daemon:       No
 
 QemuSystemCBridge initialized on port 8888
-Starting Whitney LPDDR5 SystemC Server...
+Starting OpenDDR DDR SystemC Server...
 Listening on port 8888
 Press Ctrl+C to stop
 
 Starting SystemC simulation thread...
 SystemC-QEMU bridge server started on port 8888
-Whitney SystemC Server running...
+OpenDDR SystemC Server running...
 Press Ctrl+C to stop
 Dedicated server thread started, listening for connections...
 Server thread loop iteration, checking for connections...
@@ -400,10 +400,10 @@ Client connection closed or receive failed
 Client disconnected, socket 5 closed
 
 ARM64 test completed!
-SystemC trace saved to: whitney_arm64_trace.vcd
+SystemC trace saved to: OpenDDR_arm64_trace.vcd
 
 To view the trace:
-  gtkwave whitney_arm64_trace.vcd
+  gtkwave OpenDDR_arm64_trace.vcd
 
 Cleaning up...
 Stopping SystemC server (PID: 143216)

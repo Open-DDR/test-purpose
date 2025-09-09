@@ -1,9 +1,9 @@
-#include "whitney_systemc_model.h"
+#include "openddr_systemc_model.h"
 #include <iostream>
 #include <iomanip>
 
 // AXI Write Address Channel Process
-void WhitneySystemCModel::axi_write_addr_process() {
+void OpenDDRSystemCModel::axi_write_addr_process() {
     if (!mc_rst_b.read()) {
         mc0_axi_awready_int.write(false);
         // Clear write address queue
@@ -40,7 +40,7 @@ void WhitneySystemCModel::axi_write_addr_process() {
 }
 
 // AXI Write Data Channel Process
-void WhitneySystemCModel::axi_write_data_process() {
+void OpenDDRSystemCModel::axi_write_data_process() {
     if (!mc_rst_b.read()) {
         mc0_axi_wready_int.write(false);
         while (!write_data_queue.empty()) {
@@ -72,7 +72,7 @@ void WhitneySystemCModel::axi_write_data_process() {
 }
 
 // AXI Write Response Channel Process
-void WhitneySystemCModel::axi_write_resp_process() {
+void OpenDDRSystemCModel::axi_write_resp_process() {
     if (!mc_rst_b.read()) {
         mc0_axi_bvalid_int.write(false);
         mc0_axi_bid.write(0);
@@ -100,7 +100,7 @@ void WhitneySystemCModel::axi_write_resp_process() {
 }
 
 // AXI Read Address Channel Process
-void WhitneySystemCModel::axi_read_addr_process() {
+void OpenDDRSystemCModel::axi_read_addr_process() {
     if (!mc_rst_b.read()) {
         mc0_axi_arready_int.write(false);
         while (!read_addr_queue.empty()) {
@@ -135,7 +135,7 @@ void WhitneySystemCModel::axi_read_addr_process() {
 }
 
 // AXI Read Data Channel Process
-void WhitneySystemCModel::axi_read_data_process() {
+void OpenDDRSystemCModel::axi_read_data_process() {
     if (!mc_rst_b.read()) {
         mc0_axi_rvalid_int.write(false);
         mc0_axi_rid.write(0);
@@ -168,7 +168,7 @@ void WhitneySystemCModel::axi_read_data_process() {
 }
 
 // APB Register Interface Process
-void WhitneySystemCModel::apb_process() {
+void OpenDDRSystemCModel::apb_process() {
     if (!mc_rst_b.read()) {
         mc_prdata_int.write(0);
         mc_pready_int.write(false);
@@ -201,7 +201,7 @@ void WhitneySystemCModel::apb_process() {
 }
 
 // Scheduler Process - Manages buffer access and command scheduling
-void WhitneySystemCModel::scheduler_process() {
+void OpenDDRSystemCModel::scheduler_process() {
     if (!mc_rst_b.read()) {
         bufacc_cycle_en = false;
         bufacc_cycle_mode_wr = false;
@@ -326,7 +326,7 @@ void WhitneySystemCModel::scheduler_process() {
 }
 
 // Sequencer Process - Executes DDR commands
-void WhitneySystemCModel::sequencer_process() {
+void OpenDDRSystemCModel::sequencer_process() {
     if (!mc_rst_b.read()) {
         seq_state = SEQ_IDLE;
         total_ddr_commands = 0;
@@ -399,7 +399,7 @@ void WhitneySystemCModel::sequencer_process() {
 }
 
 // DFI Command Process - Outputs DDR commands to DFI interface
-void WhitneySystemCModel::dfi_command_process() {
+void OpenDDRSystemCModel::dfi_command_process() {
     if (!mc_rst_b.read()) {
         dfi_cs_0_p0.write(0);
         dfi_cs_0_p1.write(0);
@@ -434,7 +434,7 @@ void WhitneySystemCModel::dfi_command_process() {
 }
 
 // DFI Write Data Process
-void WhitneySystemCModel::dfi_write_data_process() {
+void OpenDDRSystemCModel::dfi_write_data_process() {
     if (!mc_rst_b.read()) {
         // Reset all write data outputs
         for (int i = 0; i < 16; i++) {
@@ -457,7 +457,7 @@ void WhitneySystemCModel::dfi_write_data_process() {
 }
 
 // DFI Read Data Process
-void WhitneySystemCModel::dfi_read_data_process() {
+void OpenDDRSystemCModel::dfi_read_data_process() {
     if (!mc_rst_b.read()) {
         mc_rdrst_b.write(false);
         mc_rcv_en.write(false);
@@ -472,14 +472,14 @@ void WhitneySystemCModel::dfi_read_data_process() {
 }
 
 // Refresh Timer Process
-void WhitneySystemCModel::refresh_timer_process() {
+void OpenDDRSystemCModel::refresh_timer_process() {
     if (!porst_b.read()) {
         refresh_counter = 0;
         refresh_pending_counter = 0;
         return;
     }
 
-    // Simple refresh timer (7.8us for LPDDR5)
+    // Simple refresh timer (7.8us for DDR)
     refresh_counter++;
     if (refresh_counter >= 1950) { // Assuming 25MHz slow clock
         refresh_counter = 0;
@@ -496,7 +496,7 @@ void WhitneySystemCModel::refresh_timer_process() {
 
 // Helper Functions Implementation
 
-void WhitneySystemCModel::reset_model() {
+void OpenDDRSystemCModel::reset_model() {
     seq_state = SEQ_IDLE;
     ddr_init_done = false;
     bufacc_cycle_en = false;
@@ -525,7 +525,7 @@ void WhitneySystemCModel::reset_model() {
     page_misses = 0;
 }
 
-void WhitneySystemCModel::update_page_table(int bank, sc_uint<ROW_WIDTH> row, bool open) {
+void OpenDDRSystemCModel::update_page_table(int bank, sc_uint<ROW_WIDTH> row, bool open) {
     if (bank < PAGE_TABLE_DEPTH) {
         page_table_vld_memory[bank] = open;
         if (open) {
@@ -534,21 +534,21 @@ void WhitneySystemCModel::update_page_table(int bank, sc_uint<ROW_WIDTH> row, bo
     }
 }
 
-bool WhitneySystemCModel::check_page_hit(int bank, sc_uint<ROW_WIDTH> row) {
+bool OpenDDRSystemCModel::check_page_hit(int bank, sc_uint<ROW_WIDTH> row) {
     if (bank < PAGE_TABLE_DEPTH && page_table_vld_memory[bank]) {
         return (page_table_row_memory[bank] == row);
     }
     return false;
 }
 
-void WhitneySystemCModel::schedule_ddr_command(const DDRCommand& cmd) {
+void OpenDDRSystemCModel::schedule_ddr_command(const DDRCommand& cmd) {
     ddr_cmd_queue.push(cmd);
     std::cout << "@" << sc_time_stamp() << " DDR Cmd Scheduled: Type=" 
               << cmd.cmd_type << " Rank=" << cmd.rank << " Bank=" << cmd.bank 
               << " Row=0x" << std::hex << cmd.row << " Col=0x" << cmd.col << std::endl;
 }
 
-void WhitneySystemCModel::execute_ddr_command(const DDRCommand& cmd) {
+void OpenDDRSystemCModel::execute_ddr_command(const DDRCommand& cmd) {
     std::cout << "@" << sc_time_stamp() << " DDR Cmd Executed: Type=" 
               << cmd.cmd_type << " Rank=" << cmd.rank << " Bank=" << cmd.bank 
               << " Row=0x" << std::hex << cmd.row << " Col=0x" << cmd.col << std::endl;
@@ -576,7 +576,7 @@ void WhitneySystemCModel::execute_ddr_command(const DDRCommand& cmd) {
     }
 }
 
-sc_uint<32> WhitneySystemCModel::read_register(sc_uint<10> addr) {
+sc_uint<32> OpenDDRSystemCModel::read_register(sc_uint<10> addr) {
     // Simplified register map
     switch (addr.to_uint()) {
         case 0x000: return seq_control_reg;
@@ -603,7 +603,7 @@ sc_uint<32> WhitneySystemCModel::read_register(sc_uint<10> addr) {
     }
 }
 
-void WhitneySystemCModel::write_register(sc_uint<10> addr, sc_uint<32> data) {
+void OpenDDRSystemCModel::write_register(sc_uint<10> addr, sc_uint<32> data) {
     // Simplified register map
     switch (addr.to_uint()) {
         case 0x000: seq_control_reg = data; break;
@@ -629,9 +629,9 @@ void WhitneySystemCModel::write_register(sc_uint<10> addr, sc_uint<32> data) {
     }
 }
 
-void WhitneySystemCModel::decode_address(sc_uint<40> addr, int& rank, int& bank, 
+void OpenDDRSystemCModel::decode_address(sc_uint<40> addr, int& rank, int& bank, 
                                         sc_uint<ROW_WIDTH>& row, sc_uint<10>& col) {
-    // LPDDR5 address mapping (simplified)
+    // DDR address mapping (simplified)
     // Addr[31] = CS, Addr[30:15] = ROW, Addr[14:12] = BANK, Addr[11:2] = COL
     rank = (addr >> 31) & 0x1;
     bank = (addr >> 12) & 0x7;
@@ -639,8 +639,8 @@ void WhitneySystemCModel::decode_address(sc_uint<40> addr, int& rank, int& bank,
     col = (addr >> 2) & 0x3FF;
 }
 
-void WhitneySystemCModel::print_statistics() {
-    std::cout << "\n=== Whitney SystemC Model Statistics ===" << std::endl;
+void OpenDDRSystemCModel::print_statistics() {
+    std::cout << "\n=== OpenDDR SystemC Model Statistics ===" << std::endl;
     std::cout << "Total Write Transactions: " << total_write_transactions << std::endl;
     std::cout << "Total Read Transactions:  " << total_read_transactions << std::endl;
     std::cout << "Total DDR Commands:       " << total_ddr_commands << std::endl;

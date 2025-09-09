@@ -1,5 +1,5 @@
 #define SC_INCLUDE_DYNAMIC_PROCESSES
-#include "whitney_systemc_model.h"
+#include "openddr_systemc_model.h"
 #include <systemc.h>
 
 // Simple AXI Master for testing
@@ -182,8 +182,8 @@ void AXIMaster::read_transaction(sc_uint<40> addr, sc_uint<12> id) {
               << std::hex << addr << " ID=" << id << std::endl;
 }
 
-// Simple LPDDR5 PHY Model for DFI interface
-SC_MODULE(LPDDR5PHY) {
+// Simple DDR PHY Model for DFI interface
+SC_MODULE(DDRPHY) {
     // Clock and Reset
     sc_in<bool> clk;
     sc_in<bool> rst_n;
@@ -234,7 +234,7 @@ SC_MODULE(LPDDR5PHY) {
     // Memory array (simplified)
     std::map<sc_uint<40>, sc_uint<64>> memory;
 
-    SC_CTOR(LPDDR5PHY) {
+    SC_CTOR(DDRPHY) {
         SC_METHOD(dfi_monitor_process);
         sensitive << clk.pos();
         dont_initialize();
@@ -248,7 +248,7 @@ SC_MODULE(LPDDR5PHY) {
     void read_data_process();
 };
 
-void LPDDR5PHY::dfi_monitor_process() {
+void DDRPHY::dfi_monitor_process() {
     if (!rst_n.read()) {
         return;
     }
@@ -273,7 +273,7 @@ void LPDDR5PHY::dfi_monitor_process() {
     }
 }
 
-void LPDDR5PHY::read_data_process() {
+void DDRPHY::read_data_process() {
     if (!rst_n.read()) {
         dfi_rddata_valid.write(false);
         dfi_rddata_0.write(0);
@@ -342,7 +342,7 @@ void APBMaster::apb_stimulus_process() {
     
     // Configure the memory controller
     apb_write(0x000, 0x00000001); // seq_control_reg - DDR init done
-    apb_write(0x008, 0x00030520); // ddr_config_reg - LPDDR5, BL32
+    apb_write(0x008, 0x00030520); // ddr_config_reg - DDR, BL32
     apb_write(0x048, 0x00001F41); // refresh_cntrl_reg - Enable refresh
     
     // Read back some registers
@@ -490,160 +490,160 @@ int sc_main(int argc, char* argv[]) {
     sc_signal<sc_uint<32>> dfi_rddata_12, dfi_rddata_13, dfi_rddata_14, dfi_rddata_15;
 
     // Instantiate modules
-    WhitneySystemCModel whitney("whitney");
+    OpenDDRSystemCModel OpenDDR("OpenDDR");
     AXIMaster axi_master("axi_master");
     APBMaster apb_master("apb_master");
-    LPDDR5PHY phy("phy");
+    DDRPHY phy("phy");
     ResetGenerator reset_gen("reset_gen");
 
-    // Connect Whitney SystemC Model
-    whitney.mck(mck);
-    whitney.mc_rst_b(mc_rst_b);
-    whitney.porst_b(porst_b);
-    whitney.slow_clk(slow_clk);
-    whitney.mc0_aclk(axi_clk);
-    whitney.mc0_aresetn(axi_rst_n);
+    // Connect OpenDDR SystemC Model
+    OpenDDR.mck(mck);
+    OpenDDR.mc_rst_b(mc_rst_b);
+    OpenDDR.porst_b(porst_b);
+    OpenDDR.slow_clk(slow_clk);
+    OpenDDR.mc0_aclk(axi_clk);
+    OpenDDR.mc0_aresetn(axi_rst_n);
     
     // AXI connections
-    whitney.mc0_axi_awid(axi_awid);
-    whitney.mc0_axi_awaddr(axi_awaddr);
-    whitney.mc0_axi_awlen(axi_awlen);
-    whitney.mc0_axi_awsize(axi_awsize);
-    whitney.mc0_axi_awburst(axi_awburst);
-    whitney.mc0_axi_awlock(axi_awlock);
-    whitney.mc0_axi_awcache(axi_awcache);
-    whitney.mc0_axi_awprot(axi_awprot);
-    whitney.mc0_axi_awqos(axi_awqos);
-    whitney.mc0_axi_awvalid(axi_awvalid);
-    whitney.mc0_axi_awready(axi_awready);
+    OpenDDR.mc0_axi_awid(axi_awid);
+    OpenDDR.mc0_axi_awaddr(axi_awaddr);
+    OpenDDR.mc0_axi_awlen(axi_awlen);
+    OpenDDR.mc0_axi_awsize(axi_awsize);
+    OpenDDR.mc0_axi_awburst(axi_awburst);
+    OpenDDR.mc0_axi_awlock(axi_awlock);
+    OpenDDR.mc0_axi_awcache(axi_awcache);
+    OpenDDR.mc0_axi_awprot(axi_awprot);
+    OpenDDR.mc0_axi_awqos(axi_awqos);
+    OpenDDR.mc0_axi_awvalid(axi_awvalid);
+    OpenDDR.mc0_axi_awready(axi_awready);
     
-    whitney.mc0_axi_wdata(axi_wdata);
-    whitney.mc0_axi_wstrb(axi_wstrb);
-    whitney.mc0_axi_wlast(axi_wlast);
-    whitney.mc0_axi_wvalid(axi_wvalid);
-    whitney.mc0_axi_wready(axi_wready);
+    OpenDDR.mc0_axi_wdata(axi_wdata);
+    OpenDDR.mc0_axi_wstrb(axi_wstrb);
+    OpenDDR.mc0_axi_wlast(axi_wlast);
+    OpenDDR.mc0_axi_wvalid(axi_wvalid);
+    OpenDDR.mc0_axi_wready(axi_wready);
     
-    whitney.mc0_axi_bid(axi_bid);
-    whitney.mc0_axi_bresp(axi_bresp);
-    whitney.mc0_axi_bvalid(axi_bvalid);
-    whitney.mc0_axi_bready(axi_bready);
+    OpenDDR.mc0_axi_bid(axi_bid);
+    OpenDDR.mc0_axi_bresp(axi_bresp);
+    OpenDDR.mc0_axi_bvalid(axi_bvalid);
+    OpenDDR.mc0_axi_bready(axi_bready);
     
-    whitney.mc0_axi_arid(axi_arid);
-    whitney.mc0_axi_araddr(axi_araddr);
-    whitney.mc0_axi_arlen(axi_arlen);
-    whitney.mc0_axi_arsize(axi_arsize);
-    whitney.mc0_axi_arburst(axi_arburst);
-    whitney.mc0_axi_arlock(axi_arlock);
-    whitney.mc0_axi_arcache(axi_arcache);
-    whitney.mc0_axi_arprot(axi_arprot);
-    whitney.mc0_axi_arqos(axi_arqos);
-    whitney.mc0_axi_arvalid(axi_arvalid);
-    whitney.mc0_axi_arready(axi_arready);
+    OpenDDR.mc0_axi_arid(axi_arid);
+    OpenDDR.mc0_axi_araddr(axi_araddr);
+    OpenDDR.mc0_axi_arlen(axi_arlen);
+    OpenDDR.mc0_axi_arsize(axi_arsize);
+    OpenDDR.mc0_axi_arburst(axi_arburst);
+    OpenDDR.mc0_axi_arlock(axi_arlock);
+    OpenDDR.mc0_axi_arcache(axi_arcache);
+    OpenDDR.mc0_axi_arprot(axi_arprot);
+    OpenDDR.mc0_axi_arqos(axi_arqos);
+    OpenDDR.mc0_axi_arvalid(axi_arvalid);
+    OpenDDR.mc0_axi_arready(axi_arready);
     
-    whitney.mc0_axi_rid(axi_rid);
-    whitney.mc0_axi_rdata(axi_rdata);
-    whitney.mc0_axi_rresp(axi_rresp);
-    whitney.mc0_axi_rlast(axi_rlast);
-    whitney.mc0_axi_rvalid(axi_rvalid);
-    whitney.mc0_axi_rready(axi_rready);
+    OpenDDR.mc0_axi_rid(axi_rid);
+    OpenDDR.mc0_axi_rdata(axi_rdata);
+    OpenDDR.mc0_axi_rresp(axi_rresp);
+    OpenDDR.mc0_axi_rlast(axi_rlast);
+    OpenDDR.mc0_axi_rvalid(axi_rvalid);
+    OpenDDR.mc0_axi_rready(axi_rready);
     
     // APB connections
-    whitney.mc_psel(apb_psel);
-    whitney.mc_penable(apb_penable);
-    whitney.mc_pwr(apb_pwrite);
-    whitney.mc_paddr(apb_paddr);
-    whitney.mc_pwdata(apb_pwdata);
-    whitney.mc_prdata(apb_prdata);
-    whitney.mc_pready(apb_pready);
-    whitney.mc_pslverr(apb_pslverr);
+    OpenDDR.mc_psel(apb_psel);
+    OpenDDR.mc_penable(apb_penable);
+    OpenDDR.mc_pwr(apb_pwrite);
+    OpenDDR.mc_paddr(apb_paddr);
+    OpenDDR.mc_pwdata(apb_pwdata);
+    OpenDDR.mc_prdata(apb_prdata);
+    OpenDDR.mc_pready(apb_pready);
+    OpenDDR.mc_pslverr(apb_pslverr);
     
     // DFI connections (simplified)
-    whitney.dfi_dram_clk_disable_0(dfi_dram_clk_disable_0);
-    whitney.dfi_dram_clk_disable_1(dfi_dram_clk_disable_1);
-    whitney.dfi_dram_ca_disable(dfi_dram_ca_disable);
-    whitney.dfi_cs_0_p0(dfi_cs_0_p0);
-    whitney.dfi_cs_0_p1(dfi_cs_0_p1);
-    whitney.dfi_cs_1_p2(dfi_cs_1_p2);
-    whitney.dfi_cs_1_p3(dfi_cs_1_p3);
-    whitney.dfi_address_0_p0(dfi_address_0_p0);
-    whitney.dfi_address_0_p1(dfi_address_0_p1);
-    whitney.dfi_address_1_p2(dfi_address_1_p2);
-    whitney.dfi_address_1_p3(dfi_address_1_p3);
-    whitney.dfi_reset_n(dfi_reset_n);
+    OpenDDR.dfi_dram_clk_disable_0(dfi_dram_clk_disable_0);
+    OpenDDR.dfi_dram_clk_disable_1(dfi_dram_clk_disable_1);
+    OpenDDR.dfi_dram_ca_disable(dfi_dram_ca_disable);
+    OpenDDR.dfi_cs_0_p0(dfi_cs_0_p0);
+    OpenDDR.dfi_cs_0_p1(dfi_cs_0_p1);
+    OpenDDR.dfi_cs_1_p2(dfi_cs_1_p2);
+    OpenDDR.dfi_cs_1_p3(dfi_cs_1_p3);
+    OpenDDR.dfi_address_0_p0(dfi_address_0_p0);
+    OpenDDR.dfi_address_0_p1(dfi_address_0_p1);
+    OpenDDR.dfi_address_1_p2(dfi_address_1_p2);
+    OpenDDR.dfi_address_1_p3(dfi_address_1_p3);
+    OpenDDR.dfi_reset_n(dfi_reset_n);
     
-    whitney.dfi_wck_cs(dfi_wck_cs);
-    whitney.dfi_wck_en(dfi_wck_en);
-    whitney.dfi_wck_toggle(dfi_wck_toggle);
+    OpenDDR.dfi_wck_cs(dfi_wck_cs);
+    OpenDDR.dfi_wck_en(dfi_wck_en);
+    OpenDDR.dfi_wck_toggle(dfi_wck_toggle);
     
-    whitney.dfi_wrdata_0(dfi_wrdata_0);
-    whitney.dfi_wrdata_1(dfi_wrdata_1);
-    whitney.dfi_wrdata_2(dfi_wrdata_2);
-    whitney.dfi_wrdata_3(dfi_wrdata_3);
-    whitney.dfi_wrdata_4(dfi_wrdata_4);
-    whitney.dfi_wrdata_5(dfi_wrdata_5);
-    whitney.dfi_wrdata_6(dfi_wrdata_6);
-    whitney.dfi_wrdata_7(dfi_wrdata_7);
-    whitney.dfi_wrdata_8(dfi_wrdata_8);
-    whitney.dfi_wrdata_9(dfi_wrdata_9);
-    whitney.dfi_wrdata_10(dfi_wrdata_10);
-    whitney.dfi_wrdata_11(dfi_wrdata_11);
-    whitney.dfi_wrdata_12(dfi_wrdata_12);
-    whitney.dfi_wrdata_13(dfi_wrdata_13);
-    whitney.dfi_wrdata_14(dfi_wrdata_14);
-    whitney.dfi_wrdata_15(dfi_wrdata_15);
-    whitney.dfi_wrdata_mask_0(dfi_wrdata_mask_0);
-    whitney.dfi_wrdata_mask_1(dfi_wrdata_mask_1);
-    whitney.dfi_wrdata_mask_2(dfi_wrdata_mask_2);
-    whitney.dfi_wrdata_mask_3(dfi_wrdata_mask_3);
-    whitney.dfi_wrdata_mask_4(dfi_wrdata_mask_4);
-    whitney.dfi_wrdata_mask_5(dfi_wrdata_mask_5);
-    whitney.dfi_wrdata_mask_6(dfi_wrdata_mask_6);
-    whitney.dfi_wrdata_mask_7(dfi_wrdata_mask_7);
-    whitney.dfi_wrdata_mask_8(dfi_wrdata_mask_8);
-    whitney.dfi_wrdata_mask_9(dfi_wrdata_mask_9);
-    whitney.dfi_wrdata_mask_10(dfi_wrdata_mask_10);
-    whitney.dfi_wrdata_mask_11(dfi_wrdata_mask_11);
-    whitney.dfi_wrdata_mask_12(dfi_wrdata_mask_12);
-    whitney.dfi_wrdata_mask_13(dfi_wrdata_mask_13);
-    whitney.dfi_wrdata_mask_14(dfi_wrdata_mask_14);
-    whitney.dfi_wrdata_mask_15(dfi_wrdata_mask_15);
-    whitney.dfi_wrdata_en_0(dfi_wrdata_en_0);
-    whitney.dfi_wrdata_en_1(dfi_wrdata_en_1);
-    whitney.dfi_wrdata_en_2(dfi_wrdata_en_2);
-    whitney.dfi_wrdata_en_3(dfi_wrdata_en_3);
-    whitney.dfi_wrdata_en_4(dfi_wrdata_en_4);
-    whitney.dfi_wrdata_en_5(dfi_wrdata_en_5);
-    whitney.dfi_wrdata_en_6(dfi_wrdata_en_6);
-    whitney.dfi_wrdata_en_7(dfi_wrdata_en_7);
-    whitney.dfi_wrdata_en_8(dfi_wrdata_en_8);
-    whitney.dfi_wrdata_en_9(dfi_wrdata_en_9);
-    whitney.dfi_wrdata_en_10(dfi_wrdata_en_10);
-    whitney.dfi_wrdata_en_11(dfi_wrdata_en_11);
-    whitney.dfi_wrdata_en_12(dfi_wrdata_en_12);
-    whitney.dfi_wrdata_en_13(dfi_wrdata_en_13);
-    whitney.dfi_wrdata_en_14(dfi_wrdata_en_14);
-    whitney.dfi_wrdata_en_15(dfi_wrdata_en_15);
+    OpenDDR.dfi_wrdata_0(dfi_wrdata_0);
+    OpenDDR.dfi_wrdata_1(dfi_wrdata_1);
+    OpenDDR.dfi_wrdata_2(dfi_wrdata_2);
+    OpenDDR.dfi_wrdata_3(dfi_wrdata_3);
+    OpenDDR.dfi_wrdata_4(dfi_wrdata_4);
+    OpenDDR.dfi_wrdata_5(dfi_wrdata_5);
+    OpenDDR.dfi_wrdata_6(dfi_wrdata_6);
+    OpenDDR.dfi_wrdata_7(dfi_wrdata_7);
+    OpenDDR.dfi_wrdata_8(dfi_wrdata_8);
+    OpenDDR.dfi_wrdata_9(dfi_wrdata_9);
+    OpenDDR.dfi_wrdata_10(dfi_wrdata_10);
+    OpenDDR.dfi_wrdata_11(dfi_wrdata_11);
+    OpenDDR.dfi_wrdata_12(dfi_wrdata_12);
+    OpenDDR.dfi_wrdata_13(dfi_wrdata_13);
+    OpenDDR.dfi_wrdata_14(dfi_wrdata_14);
+    OpenDDR.dfi_wrdata_15(dfi_wrdata_15);
+    OpenDDR.dfi_wrdata_mask_0(dfi_wrdata_mask_0);
+    OpenDDR.dfi_wrdata_mask_1(dfi_wrdata_mask_1);
+    OpenDDR.dfi_wrdata_mask_2(dfi_wrdata_mask_2);
+    OpenDDR.dfi_wrdata_mask_3(dfi_wrdata_mask_3);
+    OpenDDR.dfi_wrdata_mask_4(dfi_wrdata_mask_4);
+    OpenDDR.dfi_wrdata_mask_5(dfi_wrdata_mask_5);
+    OpenDDR.dfi_wrdata_mask_6(dfi_wrdata_mask_6);
+    OpenDDR.dfi_wrdata_mask_7(dfi_wrdata_mask_7);
+    OpenDDR.dfi_wrdata_mask_8(dfi_wrdata_mask_8);
+    OpenDDR.dfi_wrdata_mask_9(dfi_wrdata_mask_9);
+    OpenDDR.dfi_wrdata_mask_10(dfi_wrdata_mask_10);
+    OpenDDR.dfi_wrdata_mask_11(dfi_wrdata_mask_11);
+    OpenDDR.dfi_wrdata_mask_12(dfi_wrdata_mask_12);
+    OpenDDR.dfi_wrdata_mask_13(dfi_wrdata_mask_13);
+    OpenDDR.dfi_wrdata_mask_14(dfi_wrdata_mask_14);
+    OpenDDR.dfi_wrdata_mask_15(dfi_wrdata_mask_15);
+    OpenDDR.dfi_wrdata_en_0(dfi_wrdata_en_0);
+    OpenDDR.dfi_wrdata_en_1(dfi_wrdata_en_1);
+    OpenDDR.dfi_wrdata_en_2(dfi_wrdata_en_2);
+    OpenDDR.dfi_wrdata_en_3(dfi_wrdata_en_3);
+    OpenDDR.dfi_wrdata_en_4(dfi_wrdata_en_4);
+    OpenDDR.dfi_wrdata_en_5(dfi_wrdata_en_5);
+    OpenDDR.dfi_wrdata_en_6(dfi_wrdata_en_6);
+    OpenDDR.dfi_wrdata_en_7(dfi_wrdata_en_7);
+    OpenDDR.dfi_wrdata_en_8(dfi_wrdata_en_8);
+    OpenDDR.dfi_wrdata_en_9(dfi_wrdata_en_9);
+    OpenDDR.dfi_wrdata_en_10(dfi_wrdata_en_10);
+    OpenDDR.dfi_wrdata_en_11(dfi_wrdata_en_11);
+    OpenDDR.dfi_wrdata_en_12(dfi_wrdata_en_12);
+    OpenDDR.dfi_wrdata_en_13(dfi_wrdata_en_13);
+    OpenDDR.dfi_wrdata_en_14(dfi_wrdata_en_14);
+    OpenDDR.dfi_wrdata_en_15(dfi_wrdata_en_15);
     
-    whitney.mc_rdrst_b(mc_rdrst_b);
-    whitney.mc_rcv_en(mc_rcv_en);
-    whitney.dfi_rddata_en(dfi_rddata_en);
-    whitney.dfi_rddata_valid(dfi_rddata_valid);
-    whitney.dfi_rddata_0(dfi_rddata_0);
-    whitney.dfi_rddata_1(dfi_rddata_1);
-    whitney.dfi_rddata_2(dfi_rddata_2);
-    whitney.dfi_rddata_3(dfi_rddata_3);
-    whitney.dfi_rddata_4(dfi_rddata_4);
-    whitney.dfi_rddata_5(dfi_rddata_5);
-    whitney.dfi_rddata_6(dfi_rddata_6);
-    whitney.dfi_rddata_7(dfi_rddata_7);
-    whitney.dfi_rddata_8(dfi_rddata_8);
-    whitney.dfi_rddata_9(dfi_rddata_9);
-    whitney.dfi_rddata_10(dfi_rddata_10);
-    whitney.dfi_rddata_11(dfi_rddata_11);
-    whitney.dfi_rddata_12(dfi_rddata_12);
-    whitney.dfi_rddata_13(dfi_rddata_13);
-    whitney.dfi_rddata_14(dfi_rddata_14);
-    whitney.dfi_rddata_15(dfi_rddata_15);
+    OpenDDR.mc_rdrst_b(mc_rdrst_b);
+    OpenDDR.mc_rcv_en(mc_rcv_en);
+    OpenDDR.dfi_rddata_en(dfi_rddata_en);
+    OpenDDR.dfi_rddata_valid(dfi_rddata_valid);
+    OpenDDR.dfi_rddata_0(dfi_rddata_0);
+    OpenDDR.dfi_rddata_1(dfi_rddata_1);
+    OpenDDR.dfi_rddata_2(dfi_rddata_2);
+    OpenDDR.dfi_rddata_3(dfi_rddata_3);
+    OpenDDR.dfi_rddata_4(dfi_rddata_4);
+    OpenDDR.dfi_rddata_5(dfi_rddata_5);
+    OpenDDR.dfi_rddata_6(dfi_rddata_6);
+    OpenDDR.dfi_rddata_7(dfi_rddata_7);
+    OpenDDR.dfi_rddata_8(dfi_rddata_8);
+    OpenDDR.dfi_rddata_9(dfi_rddata_9);
+    OpenDDR.dfi_rddata_10(dfi_rddata_10);
+    OpenDDR.dfi_rddata_11(dfi_rddata_11);
+    OpenDDR.dfi_rddata_12(dfi_rddata_12);
+    OpenDDR.dfi_rddata_13(dfi_rddata_13);
+    OpenDDR.dfi_rddata_14(dfi_rddata_14);
+    OpenDDR.dfi_rddata_15(dfi_rddata_15);
 
     // Connect AXI Master
     axi_master.clk(axi_clk);
@@ -751,7 +751,7 @@ int sc_main(int argc, char* argv[]) {
     reset_gen.axi_rst_n(axi_rst_n);
 
     // Enable VCD tracing
-    sc_trace_file* tf = sc_create_vcd_trace_file("whitney_trace");
+    sc_trace_file* tf = sc_create_vcd_trace_file("OpenDDR_trace");
     sc_trace(tf, mck, "mck");
     sc_trace(tf, mc_rst_b, "mc_rst_b");
     sc_trace(tf, axi_awvalid, "axi_awvalid");
@@ -775,13 +775,13 @@ int sc_main(int argc, char* argv[]) {
     sc_trace(tf, dfi_wrdata_0, "dfi_wrdata_0");
     sc_trace(tf, dfi_rddata_0, "dfi_rddata_0");
 
-    std::cout << "Starting Whitney LPDDR5 SystemC Model Simulation..." << std::endl;
+    std::cout << "Starting OpenDDR DDR SystemC Model Simulation..." << std::endl;
     
     // Run simulation
     sc_start(1000, SC_NS);
     
     // Print final statistics
-    whitney.print_statistics();
+    OpenDDR.print_statistics();
     
     sc_close_vcd_trace_file(tf);
     
