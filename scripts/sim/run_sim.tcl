@@ -6,8 +6,10 @@
 # Date: 2025
 #==============================================================================
 
-# Set simulation variables
+
+# Set simulation variables for both testbenches
 set TB_MODULE "tb_ddr2_controller"
+set TB_AXI_MODULE "ddr2_axi_controller_tb"
 set SIM_TIME "10us"
 
 puts "Starting DDR2 Controller Simulation..."
@@ -19,16 +21,30 @@ if {![file exists "work"]} {
     source compile.tcl
 }
 
-# Start simulation
-puts "Loading simulation..."
+
+# Start simulation for both testbenches
+puts "Select testbench:"
+puts "1. tb_ddr2_controller (default)"
+puts "2. ddr2_axi_controller_tb (AXI)"
+set tb_choice [gets stdin]
+if {$tb_choice == "2"} {
+    set TB_MODULE $TB_AXI_MODULE
+}
+puts "Loading simulation for $TB_MODULE..."
 vsim -t ps -voptargs=+acc $TB_MODULE
 
 # Add waves for debugging
 puts "Adding waves..."
 
-# Top-level testbench signals
-add wave -group "Testbench" -radix hex sim:/$TB_MODULE/clk
-add wave -group "Testbench" -radix hex sim:/$TB_MODULE/rst_n
+
+# Top-level testbench signals (support both testbenches)
+if {[string match *axi* $TB_MODULE]} {
+    add wave -group "Testbench" -radix hex sim:/$TB_MODULE/ACLK
+    add wave -group "Testbench" -radix hex sim:/$TB_MODULE/ARESETN
+} else {
+    add wave -group "Testbench" -radix hex sim:/$TB_MODULE/clk
+    add wave -group "Testbench" -radix hex sim:/$TB_MODULE/rst_n
+}
 
 # AXI4 Write Address Channel
 add wave -group "AXI Write Addr" -radix hex sim:/$TB_MODULE/axi_awaddr
