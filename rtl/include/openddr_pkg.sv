@@ -6,6 +6,8 @@
 // Date: 2025
 //==============================================================================
 
+`timescale 1ns/1ps
+
 package openddr_pkg;
 
     // DDR Timing Parameters (in clock cycles)
@@ -28,7 +30,7 @@ package openddr_pkg;
         CMD_RD      = 4'b0101,
         CMD_WR      = 4'b0100,
         CMD_PRE     = 4'b0010,
-        CMD_PREA    = 4'b0010,
+        CMD_PREA    = 4'b1010,  // Changed to avoid overlap
         CMD_REF     = 4'b0001,
         CMD_MRS     = 4'b0000,
         CMD_DES     = 4'b1000

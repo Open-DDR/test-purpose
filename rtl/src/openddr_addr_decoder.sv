@@ -5,6 +5,7 @@
 // Author: Open DDR Project
 // Date: 2025
 //==============================================================================
+`timescale 1ns/1ps
 
 `include "openddr_pkg.sv"
 

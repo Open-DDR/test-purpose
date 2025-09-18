@@ -1,4 +1,5 @@
 //==============================================================================
+`timescale 1ns/1ps
 // DDR2 Package
 // 
 // Description: Common definitions and parameters for DDR2 controller

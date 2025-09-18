@@ -97,8 +97,18 @@ module ddr2_axi_controller_tb;
     assign ddr2_dq = 16'hzzzz;
     assign ddr2_dqs = 2'bzz;
 
-    // Test sequence
+    // Test sequence  
+    reg bvalid_seen = 0;
+    reg rvalid_seen = 0;
+    
+    always @(posedge ACLK) begin
+        if (S_AXI_BVALID) bvalid_seen <= 1;
+        if (S_AXI_RVALID) rvalid_seen <= 1;
+    end
+    
     initial begin
+        integer wait_count;
+        
         // Reset
         ARESETN = 0;
         S_AXI_AWID = 0;
@@ -124,7 +134,12 @@ module ddr2_axi_controller_tb;
         S_AXI_AWVALID = 0;
         S_AXI_WVALID = 0;
         // Wait for write response
-        wait(S_AXI_BVALID);
+        bvalid_seen = 0;
+        wait_count = 0;
+        while (!bvalid_seen && wait_count < 1000) begin
+            #10;
+            wait_count = wait_count + 1;
+        end
         #10;
         // Read transaction
         S_AXI_ARADDR = 28'h000_1000;
@@ -132,7 +147,12 @@ module ddr2_axi_controller_tb;
         #10;
         S_AXI_ARVALID = 0;
         // Wait for read data
-        wait(S_AXI_RVALID);
+        rvalid_seen = 0;
+        wait_count = 0;
+        while (!rvalid_seen && wait_count < 1000) begin
+            #10;
+            wait_count = wait_count + 1;
+        end
         #10;
         $display("Read Data: %h", S_AXI_RDATA);
         #100;

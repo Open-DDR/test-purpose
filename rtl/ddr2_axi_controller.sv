@@ -1,7 +1,8 @@
 // ddr2_axi_controller.sv
+`timescale 1ns/1ps
 // DDR2 Controller RTL with AXI4-Lite interface (simplified, extend as needed)
 
-`include "../rtl/include/ddr2_pkg.sv"
+`include "ddr2_pkg.sv"
 
 module ddr2_axi_controller #(
     parameter ADDR_WIDTH = 28, // DDR2 address width
