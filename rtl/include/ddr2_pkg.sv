@@ -23,15 +23,14 @@ package ddr2_pkg;
     
     // DDR2 Commands
     typedef enum logic [3:0] {
-        CMD_NOP     = 4'b0111,
-        CMD_ACT     = 4'b0011,
-        CMD_RD      = 4'b0101,
-        CMD_WR      = 4'b0100,
-        CMD_PRE     = 4'b0010,
-        CMD_PREA    = 4'b0010,
-        CMD_REF     = 4'b0001,
-        CMD_MRS     = 4'b0000,
-        CMD_DES     = 4'b1000
+        CMD_NOP  = 4'b0111,
+        CMD_ACT  = 4'b0011,
+        CMD_RD   = 4'b0101,
+        CMD_WR   = 4'b0100,
+        CMD_PRE  = 4'b0010,
+        CMD_REF  = 4'b0001,
+        CMD_MRS  = 4'b0000,
+        CMD_DES  = 4'b1000
     } ddr2_cmd_t;
     
     // Bank States
