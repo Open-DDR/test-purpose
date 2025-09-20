@@ -1,0 +1,13 @@
+# DESCRIPTION: Verilator output: Timestamp data for --skip-identical.  Delete at will.
+C "--cc --exe --build --top-module ddr2_axi_controller --Mdir /aws/home/jayb/proj/open-ddr/test-purpose/rtl/obj_dir_smoke_extension -CFLAGS -DSMOKE_TEST -O0 -I/aws/home/jayb/proj/open-ddr/test-purpose/rtl/include -I/aws/home/jayb/proj/open-ddr/test-purpose/rtl/src /aws/home/jayb/proj/open-ddr/test-purpose/rtl/ddr2_axi_controller_verilator_clean.sv /aws/home/jayb/proj/open-ddr/test-purpose/rtl/smoke_test_fixed.cpp -o smoke_test_enhanced"
+S     12888 4760236223  1758340840   274018757  1758340840   274018757 "/aws/home/jayb/proj/open-ddr/test-purpose/rtl/ddr2_axi_controller_verilator_clean.sv"
+T     22321 422749890  1758380617   408589171  1758380617   408589171 "/aws/home/jayb/proj/open-ddr/test-purpose/rtl/obj_dir_smoke_extension/Vddr2_axi_controller.cpp"
+T      5628 422749888  1758380617   404589023  1758380617   404589023 "/aws/home/jayb/proj/open-ddr/test-purpose/rtl/obj_dir_smoke_extension/Vddr2_axi_controller.h"
+T      2051 422749892  1758380617   408589171  1758380617   408589171 "/aws/home/jayb/proj/open-ddr/test-purpose/rtl/obj_dir_smoke_extension/Vddr2_axi_controller.mk"
+T      7591 422749889  1758380617   404589023  1758380617   404589023 "/aws/home/jayb/proj/open-ddr/test-purpose/rtl/obj_dir_smoke_extension/Vddr2_axi_controller__Slow.cpp"
+T       766 422749886  1758380617   404589023  1758380617   404589023 "/aws/home/jayb/proj/open-ddr/test-purpose/rtl/obj_dir_smoke_extension/Vddr2_axi_controller__Syms.cpp"
+T       958 422749887  1758380617   404589023  1758380617   404589023 "/aws/home/jayb/proj/open-ddr/test-purpose/rtl/obj_dir_smoke_extension/Vddr2_axi_controller__Syms.h"
+T       918 422749893  1758380617   408589171  1758380617   408589171 "/aws/home/jayb/proj/open-ddr/test-purpose/rtl/obj_dir_smoke_extension/Vddr2_axi_controller__ver.d"
+T         0        0  1758380617   408589171  1758380617   408589171 "/aws/home/jayb/proj/open-ddr/test-purpose/rtl/obj_dir_smoke_extension/Vddr2_axi_controller__verFiles.dat"
+T      1602 422749891  1758380617   408589171  1758380617   408589171 "/aws/home/jayb/proj/open-ddr/test-purpose/rtl/obj_dir_smoke_extension/Vddr2_axi_controller_classes.mk"
+S   7892640  1875973  1758084720   109421496  1598506306           0 "/usr/bin/verilator_bin"
