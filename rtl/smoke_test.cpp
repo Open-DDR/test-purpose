@@ -1,4 +1,4 @@
-#include "Vddr2_controller.h"
+#include "Vddr2_axi_controller.h"
 #include "verilated.h"
 #include <iostream>
 
@@ -6,7 +6,7 @@ int main(int argc, char **argv) {
     Verilated::commandArgs(argc, argv);
     
     // Create instance of our module under test
-    Vddr2_controller* dut = new Vddr2_controller;
+    Vddr2_axi_controller* dut = new Vddr2_axi_controller;
     
     std::cout << "Starting DDR2 Controller smoke test..." << std::endl;
     

@@ -6,11 +6,12 @@
 echo "=== FIXED SMOKE TEST BUILD (Linux) ==="
 echo "Building DDR controller with Verilator and testbench..."
 
-# Set paths based on the error log
-MODEL_PATH="/aws/home/jayb/Downloads/888/DDR2-800_2Gb_x8"
-MAIN_RTL_FILE="$MODEL_PATH/rtl/src/ddr2_controller.sv"
+# Set paths to use local RTL files
+CURRENT_DIR="$(pwd)"
+MODEL_PATH="$CURRENT_DIR"
+MAIN_RTL_FILE="$MODEL_PATH/ddr2_axi_controller_verilator_clean.sv"
 OBJ_DIR="$MODEL_PATH/obj_dir_smoke_fixed"
-TESTBENCH_FILE="/aws/home/jayb/proj/open-ddr/test-purpose/rtl/smoke_test.cpp"
+TESTBENCH_FILE="$MODEL_PATH/smoke_test_fixed.cpp"
 
 # Check if the model exists
 if [ ! -d "$MODEL_PATH" ]; then
@@ -36,15 +37,15 @@ if command -v verilator >/dev/null 2>&1; then
     echo "✅ Verilator found, starting build..."
     verilator --version
     
-    # Set up include paths
+    # Set up include paths for local directory
     INCLUDE_DIRS=""
-    if [ -d "$MODEL_PATH/rtl/include" ]; then
-        INCLUDE_DIRS="$INCLUDE_DIRS -I$MODEL_PATH/rtl/include"
-        echo "✅ Added include path: $MODEL_PATH/rtl/include"
+    if [ -d "$MODEL_PATH/include" ]; then
+        INCLUDE_DIRS="$INCLUDE_DIRS -I$MODEL_PATH/include"
+        echo "✅ Added include path: $MODEL_PATH/include"
     fi
-    if [ -d "$MODEL_PATH/rtl" ]; then
-        INCLUDE_DIRS="$INCLUDE_DIRS -I$MODEL_PATH/rtl"
-        echo "✅ Added include path: $MODEL_PATH/rtl"
+    if [ -d "$MODEL_PATH/src" ]; then
+        INCLUDE_DIRS="$INCLUDE_DIRS -I$MODEL_PATH/src"
+        echo "✅ Added include path: $MODEL_PATH/src"
     fi
     
     echo "Include directories: $INCLUDE_DIRS"
@@ -56,9 +57,9 @@ if command -v verilator >/dev/null 2>&1; then
     rm -rf "$OBJ_DIR"
     mkdir -p "$OBJ_DIR"
     
-    # Run Verilator with proper testbench
+    # Run Verilator with our enhanced local files
     verilator --cc --exe --build \
-        --top-module ddr2_controller \
+        --top-module ddr2_axi_controller \
         --Mdir "$OBJ_DIR" \
         -CFLAGS "-DSMOKE_TEST -O0" \
         $INCLUDE_DIRS \
