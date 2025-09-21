@@ -7,6 +7,13 @@ echo "Building full-featured DDR controller..."
 # Set MODEL_PATH to specific downloaded location for debugging
 MODEL_PATH="/aws/home/jayb/Downloads/u/DDR2-800_2Gb_x8"
 
+# Check if this is a SystemC test request
+if [ "$1" = "systemc" ] || [ "$2" = "systemc" ]; then
+    echo ""
+    echo "🔄 Switching to SystemC test mode..."
+    exec "$(dirname "$0")/simple_systemc_test.sh" "$@"
+fi
+
 # Allow override from command line argument if provided
 if [ -n "$1" ] && [ "$1" != "UNKNOWN" ]; then
     MODEL_PATH="$1"
