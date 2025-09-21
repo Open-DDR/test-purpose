@@ -60,7 +60,8 @@ if [ "$MODEL_PATH" != "UNKNOWN" ] && [ -n "$MODEL_PATH" ]; then
             
             # Copy C++ testbench from test-purpose directory
             echo "Copying C++ testbench from test-purpose..."
-            TESTBENCH_SOURCE="/aws/home/jayb/proj/open-ddr/test-purpose/simple_testbench.cpp"
+            SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+            TESTBENCH_SOURCE="$SCRIPT_DIR/simple_testbench.cpp"
             if [ -f "$TESTBENCH_SOURCE" ]; then
                 cp "$TESTBENCH_SOURCE" "$MODEL_PATH/simple_testbench.cpp"
                 echo "✅ Copied testbench from: $TESTBENCH_SOURCE"
