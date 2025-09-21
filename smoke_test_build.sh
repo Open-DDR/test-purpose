@@ -4,7 +4,13 @@ set -e
 echo "=== SMOKE TEST BUILD (Linux) ==="
 echo "Building DDR controller with Verilator..."
 
-MODEL_PATH="$1"
+# Set MODEL_PATH to specific downloaded location for debugging
+MODEL_PATH="/aws/home/jayb/Downloads/u/DDR2-800_2Gb_x8"
+
+# Allow override from command line argument if provided
+if [ -n "$1" ] && [ "$1" != "UNKNOWN" ]; then
+    MODEL_PATH="$1"
+fi
 
 if [ "$MODEL_PATH" != "UNKNOWN" ] && [ -n "$MODEL_PATH" ]; then
     echo "✅ Using downloaded DDR model at: $MODEL_PATH"
@@ -71,7 +77,28 @@ if [ "$MODEL_PATH" != "UNKNOWN" ] && [ -n "$MODEL_PATH" ]; then
             fi
             
             echo "Building with C++ testbench..."
-            verilator --cc --exe --build --top-module ddr2_controller --Mdir "$OBJ_DIR" -CFLAGS "-DSMOKE_TEST -O0" $INCLUDE_DIRS "$MAIN_RTL_FILE" "$MODEL_PATH/simple_testbench.cpp" -o smoke_test_enhanced
+            
+            # Create a corrected version of the controller with proper type names
+            TEMP_CONTROLLER="$MODEL_PATH/ddr2_controller_corrected.sv"
+            echo "Creating corrected controller file with proper type names..."
+            
+            # Fix the type name mismatch in the controller
+            sed 's/ctrl_state_t/ddr2_state_t/g' "$MAIN_RTL_FILE" > "$TEMP_CONTROLLER"
+            
+            echo "Using corrected controller file: $TEMP_CONTROLLER"
+            
+            # Use Verilator with the corrected file
+            verilator --cc --exe --build \
+                --top-module ddr2_controller \
+                --Mdir "$OBJ_DIR" \
+                -CFLAGS "-DSMOKE_TEST -O0" \
+                --timescale 1ns/1ps \
+                -Wno-MODDUP \
+                -Wno-TIMESCALEMOD \
+                $INCLUDE_DIRS \
+                "$TEMP_CONTROLLER" \
+                "$MODEL_PATH/simple_testbench.cpp" \
+                -o smoke_test_enhanced
             
             if [ $? -eq 0 ]; then
                 echo "✅ Smoke test build completed successfully!"
