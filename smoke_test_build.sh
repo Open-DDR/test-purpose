@@ -10,7 +10,7 @@ echo "=== SMOKE TEST BUILD (Linux) ==="
 echo "Building DDR controller with Verilator..."
 
 # Set MODEL_PATH to specific downloaded location for debugging
-MODEL_PATH="/aws/home/jayb/Downloads/u/DDR2-800_2Gb_x8"
+MODEL_PATH="/aws/home/jayb/Downloads/1/DDR2-800_2Gb_x8"
 
 # Allow override from command line argument if provided
 if [ -n "$1" ] && [ "$1" != "UNKNOWN" ]; then
@@ -92,8 +92,8 @@ if [ "$MODEL_PATH" != "UNKNOWN" ] && [ -n "$MODEL_PATH" ]; then
             
             echo "Using corrected controller file: $TEMP_CONTROLLER"
             
-            # Use Verilator with the corrected file
-            verilator --cc --exe --build \
+            # Use Verilator with the corrected file and VCD tracing
+            verilator --cc --exe --build --trace \
                 --top-module ddr2_controller \
                 --Mdir "$OBJ_DIR" \
                 -CFLAGS "-DSMOKE_TEST -O0" \
@@ -112,9 +112,16 @@ if [ "$MODEL_PATH" != "UNKNOWN" ] && [ -n "$MODEL_PATH" ]; then
                 echo ""
                 echo "=== RUNNING SMOKE TEST ==="
                 cd "$OBJ_DIR"
-                ./smoke_test_enhanced
+                ./smoke_test_enhanced --vcd=smoke_waveform.vcd
                 if [ $? -eq 0 ]; then
                     echo "✅ Smoke test execution completed successfully!"
+                    if [ -f "smoke_waveform.vcd" ]; then
+                        echo "✅ VCD file generated: $OBJ_DIR/smoke_waveform.vcd"
+                        echo "📊 VCD file size: $(du -h smoke_waveform.vcd | cut -f1)"
+                        echo "🔍 You can view this file with GTKWave or VCD viewer extensions"
+                    else
+                        echo "⚠️ VCD file was not generated"
+                    fi
                 else
                     echo "❌ Smoke test execution failed"
                 fi
@@ -148,7 +155,7 @@ echo ""
 
 # Parse command line arguments
 TEST_TYPE="${1:-basic}"
-MODEL_PATH="${2:-/aws/home/jayb/Downloads/u/DDR2-800_2Gb_x8}"
+MODEL_PATH="${2:-/aws/home/jayb/Downloads/1/DDR2-800_2Gb_x8}"
 WORKSPACE_PATH="$3"
 
 echo "SystemC Test Configuration:"
