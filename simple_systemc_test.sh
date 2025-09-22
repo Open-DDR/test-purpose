@@ -7,7 +7,7 @@ echo ""
 
 # Parse command line arguments
 TEST_TYPE="${1:-basic}"
-MODEL_PATH="${2:-/aws/home/jayb/Downloads/u/DDR2-800_2Gb_x8}"
+MODEL_PATH="${2:-/aws/home/jayb/Downloads/1/DDR2-800_2Gb_x8}"
 WORKSPACE_PATH="$3"
 
 echo "SystemC Test Configuration:"
