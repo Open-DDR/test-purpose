@@ -59,91 +59,37 @@ if [ "$1" = "systemc" ]; then
         echo "   SYSTEMC_HOME: $SYSTEMC_HOME"
     }
 
-    # Create simple SystemC test
-    create_simple_test() {
-        echo "🔨 Creating simple SystemC test..."
+    # Check and use existing SystemC test files
+    check_systemc_files() {
+        echo "� Checking for existing SystemC test files..."
         
-        # Create test directory
+        # SystemC test directory
         TEST_DIR="$(dirname "$0")/systemc"
-        mkdir -p "$TEST_DIR"
         
-        # Simple SystemC test file
+        if [ ! -d "$TEST_DIR" ]; then
+            echo "❌ SystemC directory not found: $TEST_DIR"
+            echo "Creating directory..."
+            mkdir -p "$TEST_DIR"
+        fi
+        
+        # Check for existing test files
         TEST_FILE="$TEST_DIR/simple_test.cpp"
+        BASIC_TEST_FILE="$TEST_DIR/test.cpp"
         
-        cat > "$TEST_FILE" << 'EOF'
-#include <systemc.h>
-#include <iostream>
-
-SC_MODULE(simple_counter) {
-    sc_in<bool> clk;
-    sc_in<bool> reset;
-    sc_out<sc_uint<8>> count;
-    
-    sc_uint<8> counter_value;
-    
-    SC_CTOR(simple_counter) {
-        SC_METHOD(count_process);
-        sensitive << clk.pos();
-        counter_value = 0;
-    }
-    
-    void count_process() {
-        if (reset.read()) {
-            counter_value = 0;
-        } else {
-            counter_value++;
-        }
-        count.write(counter_value);
+        if [ -f "$TEST_FILE" ]; then
+            echo "✅ Found existing SystemC test: $TEST_FILE"
+            SELECTED_TEST_FILE="$TEST_FILE"
+        elif [ -f "$BASIC_TEST_FILE" ]; then
+            echo "✅ Found basic SystemC test: $BASIC_TEST_FILE"
+            SELECTED_TEST_FILE="$BASIC_TEST_FILE"
+        else
+            echo "❌ No SystemC test files found in $TEST_DIR"
+            echo "Available files:"
+            ls -la "$TEST_DIR" 2>/dev/null || echo "Directory is empty"
+            exit 1
+        fi
         
-        if (counter_value % 10 == 0) {
-            std::cout << "Counter: " << counter_value << " at " << sc_time_stamp() << std::endl;
-        }
-    }
-};
-
-SC_MODULE(testbench) {
-    sc_clock clk;
-    sc_signal<bool> reset;
-    sc_signal<sc_uint<8>> count;
-    
-    simple_counter* dut;
-    
-    SC_CTOR(testbench) : clk("clk", sc_time(10, SC_NS)) {
-        dut = new simple_counter("counter");
-        dut->clk(clk);
-        dut->reset(reset);
-        dut->count(count);
-        
-        SC_THREAD(stimulus);
-    }
-    
-    void stimulus() {
-        reset.write(true);
-        wait(25, SC_NS);
-        reset.write(false);
-        
-        std::cout << "=== Simple SystemC Counter Test ===" << std::endl;
-        std::cout << "Starting counter..." << std::endl;
-        
-        wait(200, SC_NS);
-        
-        std::cout << "Final count: " << count.read() << std::endl;
-        std::cout << "✅ SystemC test completed successfully!" << std::endl;
-        sc_stop();
-    }
-    
-    ~testbench() { delete dut; }
-};
-
-int sc_main(int argc, char* argv[]) {
-    std::cout << "=== SystemC Simple Test ===" << std::endl;
-    testbench tb("tb");
-    sc_start();
-    return 0;
-}
-EOF
-
-        echo "✅ Simple SystemC test created: $TEST_FILE"
+        echo "🎯 Using SystemC test file: $SELECTED_TEST_FILE"
     }
 
     # Build and run SystemC test
@@ -151,16 +97,20 @@ EOF
         echo "🔨 Building SystemC test..."
         cd "$TEST_DIR"
         
-        BUILD_CMD="g++ -I$SYSTEMC_HOME/include -L$SYSTEMC_HOME/lib -o simple_systemc_test simple_test.cpp -lsystemc -lm"
+        # Determine executable name based on selected test file
+        TEST_BASENAME=$(basename "$SELECTED_TEST_FILE" .cpp)
+        EXECUTABLE_NAME="${TEST_BASENAME}_executable"
+        
+        BUILD_CMD="g++ -I$SYSTEMC_HOME/include -L$SYSTEMC_HOME/lib -o $EXECUTABLE_NAME $(basename "$SELECTED_TEST_FILE") -lsystemc -lm"
         echo "🔨 Executing build command:"
         echo "   $BUILD_CMD"
         
         if eval "$BUILD_CMD"; then
             echo "✅ SystemC test build completed successfully!"
-            echo "✅ Executable: $TEST_DIR/simple_systemc_test"
+            echo "✅ Executable: $TEST_DIR/$EXECUTABLE_NAME"
             echo ""
             echo "🚀 Running SystemC test..."
-            if ./simple_systemc_test; then
+            if ./"$EXECUTABLE_NAME"; then
                 echo ""
                 echo "✅ SystemC test execution completed successfully!"
             else
@@ -175,14 +125,15 @@ EOF
 
     echo "🚀 Starting SystemC test process..."
     check_systemc
-    create_simple_test
+    check_systemc_files
     build_and_run_test
 
     echo ""
     echo "=== SYSTEMC TEST COMPLETE ==="
     echo "✅ Test Type: $TEST_TYPE"
-    echo "✅ Executable: $TEST_DIR/simple_systemc_test"
-    echo "🎯 Simple SystemC test ready!"
+    echo "✅ Test File: $SELECTED_TEST_FILE" 
+    echo "✅ Executable: $TEST_DIR/$EXECUTABLE_NAME"
+    echo "🎯 SystemC test ready!"
     
     exit 0
 fi
