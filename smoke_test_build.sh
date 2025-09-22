@@ -119,6 +119,10 @@ if [ "$MODEL_PATH" != "UNKNOWN" ] && [ -n "$MODEL_PATH" ]; then
                         echo "✅ VCD file generated: $OBJ_DIR/smoke_waveform.vcd"
                         echo "📊 VCD file size: $(du -h smoke_waveform.vcd | cut -f1)"
                         echo "🔍 You can view this file with GTKWave or VCD viewer extensions"
+                        
+                        # Create symlink for VS Code extension auto-detection
+                        ln -sf smoke_waveform.vcd smoke_test.vcd
+                        echo "🔗 Created symlink: smoke_test.vcd -> smoke_waveform.vcd for extension auto-detection"
                     else
                         echo "⚠️ VCD file was not generated"
                     fi
